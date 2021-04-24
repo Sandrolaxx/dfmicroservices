@@ -1,0 +1,32 @@
+[
+  {
+    "active": true,
+    "createdAt": "03/04/2021 13:30:42",
+    "description": "Queijo, molho, carne… Sim, estou falando daquela delícia que é o bife à parmegiana! Dá até água na boca, né?",
+    "id": 1,
+    "imageUri": "sim.githb.com",
+    "name": "Bife à parmegiana",
+    "price": 22.2,
+    "updatedAt": "03/04/2021 13:30:42"
+  },
+  {
+    "active": true,
+    "createdAt": "03/04/2021 14:48:42",
+    "description": "Feita com camadas alternadas de massa, queijo e molho de carne.",
+    "id": 2,
+    "imageUri": "testedoteste.com/imagem",
+    "name": "Lasanha Italiana",
+    "price": 13.32,
+    "updatedAt": "03/04/2021 14:48:42"
+  },
+  {
+    "active": true,
+    "createdAt": "03/04/2021 12:58:42",
+    "description": "Alface americana, salsinha, tomate cereja, queijo minas. Acompanha: Croutons.",
+    "id": 4,
+    "imageUri": "testedoteste.com/imagem 3",
+    "name": "Salada da Chef",
+    "price": 53.0,
+    "updatedAt": "03/04/2021 12:58:42"
+  }
+]

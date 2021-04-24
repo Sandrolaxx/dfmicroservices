@@ -1,0 +1,87 @@
+{
+  "DF_USER": [
+    {
+      "active": true,
+      "document": "123144333434",
+      "email": "teste1@hotmail.com",
+      "name": "Cleber da Siltva",
+      "password": "123232",
+      "phone": "45991033232",
+      "created_at": "2021-04-03 14:48:42.883",
+      "updated_at": "2021-04-03 14:48:42.883",
+      "id": 1
+    },
+    {
+      "active": true,
+      "document": "10564574902",
+      "email": "teste2@hotmail.com",
+      "name": "gabrielli vieirra",
+      "password": "saporoxo159753",
+      "phone": "4598147893",
+      "created_at": "2021-04-03 14:48:42.883",
+      "updated_at": "2021-04-03 14:48:42.883",
+      "id": 2
+    },
+    {
+      "active": true,
+      "document": "10563333332",
+      "email": "sandro@hotmail.com",
+      "name": "sandro matheus ramos",
+      "password": "1329",
+      "phone": "45991039812",
+      "created_at": "2021-04-03 14:48:42.883",
+      "updated_at": "2021-04-03 14:48:42.883",
+      "id": 3
+    }
+  ],
+  "DF_USER_ADDRESS": [
+    {
+      "active": true,
+      "city": "Cascavel",
+      "district": "Interlagos",
+      "latitude": 4343434,
+      "longitude": 4545454,
+      "main": true,
+      "number": 33,
+      "state": "PR",
+      "street": "Rua grevilha",
+      "number_ap": null,
+      "created_at": "2021-04-03 14:48:42.883",
+      "updated_at": "2021-04-03 14:48:42.883",
+      "id": 1,
+      "id_user": 1
+    },
+    {
+      "active": true,
+      "city": "Cascavel",
+      "district": "Centro",
+      "latitude": 4343434,
+      "longitude": 4545454,
+      "main": true,
+      "number": 22,
+      "state": "PR",
+      "street": "Blue baron",
+      "number_ap": 78,
+      "created_at": "2021-04-03 14:48:42.883",
+      "updated_at": "2021-04-03 14:48:42.883",
+      "id": 2,
+      "id_user": 2
+    },
+    {
+      "active": true,
+      "city": "Cascavel",
+      "district": "Interlagos",
+      "latitude": 4343434,
+      "longitude": 4545454,
+      "main": true,
+      "number": 33,
+      "state": "PR",
+      "street": "Rua grevilha",
+      "number_ap": null,
+      "created_at": "2021-04-03 14:48:42.883",
+      "updated_at": "2021-04-03 14:48:42.883",
+      "id": 3,
+      "id_user": 3
+    }
+  ]
+}

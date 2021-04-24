@@ -1,0 +1,78 @@
+[
+  {
+    "active": true,
+    "address": [
+      {
+        "active": true,
+        "city": "Cascavel",
+        "district": "Interlagos",
+        "id": 1,
+        "latitude": 4343434.0,
+        "longitude": 4545454.0,
+        "main": true,
+        "number": 33,
+        "state": "PR",
+        "street": "Rua grevilha"
+      }
+    ],
+    "createdAt": "03/04/2021 14:48:42",
+    "document": "123144333434",
+    "email": "teste1@hotmail.com",
+    "id": 1,
+    "name": "Cleber da Siltva",
+    "password": "123232",
+    "phone": "45991033232",
+    "updatedAt": "03/04/2021 14:48:42"
+  },
+  {
+    "active": true,
+    "address": [
+      {
+        "active": true,
+        "city": "Cascavel",
+        "district": "Centro",
+        "id": 2,
+        "latitude": 4343434.0,
+        "longitude": 4545454.0,
+        "main": true,
+        "number": 22,
+        "numberAp": 78,
+        "state": "PR",
+        "street": "Blue baron"
+      }
+    ],
+    "createdAt": "03/04/2021 14:48:42",
+    "document": "10564574902",
+    "email": "teste2@hotmail.com",
+    "id": 2,
+    "name": "gabrielli vieirra",
+    "password": "saporoxo159753",
+    "phone": "4598147893",
+    "updatedAt": "03/04/2021 14:48:42"
+  },
+  {
+    "active": true,
+    "address": [
+      {
+        "active": true,
+        "city": "Cascavel",
+        "district": "Interlagos",
+        "id": 3,
+        "latitude": 4343434.0,
+        "longitude": 4545454.0,
+        "main": true,
+        "number": 33,
+        "state": "PR",
+        "street": "Rua grevilha"
+      }
+    ],
+    "createdAt": "03/04/2021 14:48:42",
+    "document": "10563333332",
+    "email": "sandro@hotmail.com",
+    "id": 3,
+    "name": "sandro matheus ramos",
+    "password": "1329",
+    "phone": "45991039812",
+    "updatedAt": "03/04/2021 14:48:42"
+  }
+]

@@ -1,0 +1,123 @@
+// See https://go.microsoft.com/fwlink/?LinkId=733558
+// for the documentation about the tasks.json format
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "quarkus:dev (register)",
+			"type": "shell",
+			"command": "./mvnw quarkus:dev ",
+			"windows": {
+				"command": ".\\mvnw.cmd quarkus:dev "
+			},
+			"isBackground": true,
+			"problemMatcher": [
+				{
+					"pattern": [
+						{
+							"regexp": "\\b\\B",
+							"file": 1,
+							"location": 2,
+							"message": 3
+						}
+					],
+					"background": {
+						"activeOnStart": true,
+						"beginsPattern": "^.*Scanning for projects...*",
+						"endsPattern": "^.*Quarkus .* started in .*\\. Listening on:*"
+					}
+				}
+			],
+			"options": {
+				"cwd": "test"
+			}
+		},
+		{
+			"label": "quarkus:dev (product-management)",
+			"type": "shell",
+			"command": "./mvnw quarkus:dev ",
+			"windows": {
+				"command": ".\\mvnw.cmd quarkus:dev "
+			},
+			"isBackground": true,
+			"problemMatcher": [
+				{
+					"pattern": [
+						{
+							"regexp": "\\b\\B",
+							"file": 1,
+							"location": 2,
+							"message": 3
+						}
+					],
+					"background": {
+						"activeOnStart": true,
+						"beginsPattern": "^.*Scanning for projects...*",
+						"endsPattern": "^.*Quarkus .* started in .*\\. Listening on:*"
+					}
+				}
+			],
+			"options": {
+				"cwd": "product-management"
+			}
+		},
+		{
+			"label": "quarkus:dev (marketplace)",
+			"type": "shell",
+			"command": "./mvnw quarkus:dev ",
+			"windows": {
+				"command": ".\\mvnw.cmd quarkus:dev "
+			},
+			"isBackground": true,
+			"problemMatcher": [
+				{
+					"pattern": [
+						{
+							"regexp": "\\b\\B",
+							"file": 1,
+							"location": 2,
+							"message": 3
+						}
+					],
+					"background": {
+						"activeOnStart": true,
+						"beginsPattern": "^.*Scanning for projects...*",
+						"endsPattern": "^.*Quarkus .* started in .*\\. Listening on:*"
+					}
+				}
+			],
+			"options": {
+				"cwd": "marketplace"
+			}
+		},
+		{
+			"label": "quarkus:dev (user-management)",
+			"type": "shell",
+			"command": "./mvnw quarkus:dev ",
+			"windows": {
+				"command": ".\\mvnw.cmd quarkus:dev "
+			},
+			"isBackground": true,
+			"problemMatcher": [
+				{
+					"pattern": [
+						{
+							"regexp": "\\b\\B",
+							"file": 1,
+							"location": 2,
+							"message": 3
+						}
+					],
+					"background": {
+						"activeOnStart": true,
+						"beginsPattern": "^.*Scanning for projects...*",
+						"endsPattern": "^.*Quarkus .* started in .*\\. Listening on:*"
+					}
+				}
+			],
+			"options": {
+				"cwd": "user-management"
+			}
+		}
+	]
+}

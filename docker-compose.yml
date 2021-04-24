@@ -1,0 +1,64 @@
+version: "3.8"
+services:
+  postgres_product:
+    container_name: product-management
+    image: postgres:13
+    environment:
+      POSTGRES_USER: product
+      POSTGRES_PASSWORD: 1329
+    ports:
+      - "5432:5432"
+  postgres_marketplace:
+    container_name: marketplace
+    image: postgres:13
+    environment:
+      POSTGRES_USER: marketplace
+      POSTGRES_PASSWORD: 1329
+    ports:
+      - "5433:5432"
+  postgres_user:
+    container_name: user-management
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1329
+    ports:
+      - "5434:5432"      
+  keycloak_dfmicroservices:
+    container_name: keycloak_dfmicroservices
+    image: jboss/keycloak:12.0.4
+    environment: 
+        KEYCLOAK_USER: donafrost
+        KEYCLOAK_PASSWORD: donafrost
+    ports:
+      - "9091:8080"
+  jaeger_dfmicroservices:
+    container_name: jaeger_dfmicroservices
+    image: jaegertracing/all-in-one:1.22
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+  prometheus_dfmicroservices:
+    container_name: prometheus_dfmicroservices
+    image: prometheus-microservices
+    network_mode: "host"
+  grafana_dfmicroservices:
+    container_name: grafana_dfmicroservices
+    image: grafana/grafana:7.5.3-ubuntu
+    ports:
+      - "9092:3000"
+  artemis_dfmicroservices:
+    container_name: artemis_dfmicroservices
+    image: vromero/activemq-artemis:2.16.0-alpine
+    ports:
+      - "5672:5672"
+      - "9093:8161"
+    environment: 
+      ARTEMIS_USERNAME: donafrost
+      ARTEMIS_PASSWORD: donafrost

@@ -1,0 +1,33 @@
+// A launch configuration that compiles the extension and then opens it inside a new window
+// Use IntelliSense to learn about possible attributes.
+// Hover to view descriptions of existing attributes.
+// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "preLaunchTask": "quarkus:dev (product-management)",
+      "type": "java",
+      "request": "attach",
+      "hostName": "localhost",
+      "name": "Debug Quarkus application (product-management)",
+      "port": 5005
+    },
+    {
+      "preLaunchTask": "quarkus:dev (marketplace)",
+      "type": "java",
+      "request": "attach",
+      "hostName": "localhost",
+      "name": "Debug Quarkus application (marketplace)",
+      "port": 5006
+    },
+    {
+      "preLaunchTask": "quarkus:dev (user-management)",
+      "type": "java",
+      "request": "attach",
+      "hostName": "localhost",
+      "name": "Debug Quarkus application (user-management)",
+      "port": 5005
+    }
+  ]
+}
