@@ -5,8 +5,6 @@ import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.github.sandrolaxx.dfmicroservices.dto.ProductDto;
@@ -19,10 +17,6 @@ public class Product extends PanacheEntityBase {
 
   @Id
   public Integer id;
-
-  @ManyToOne
-  @JoinColumn(name = "ID_PRODUCT", referencedColumnName = "ID")
-  public ProductCart cart;
 
   @Column(name = "NAME")
   public String name;
