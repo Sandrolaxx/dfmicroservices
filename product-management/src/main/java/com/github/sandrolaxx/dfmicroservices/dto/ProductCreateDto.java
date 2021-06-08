@@ -1,66 +1,83 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
+
 public class ProductCreateDto {
 
-  @NotNull
-  @Size(min = 3, max = 40)
-  public String name;
+    @Size(min = 3, max = 60)
+    private String name;
 
-  @NotNull
-  @Positive
-  public Double price;
+    @Positive
+    private Double price;
 
-  @NotNull
-  @Size(min = 5, max = 90)
-  public String description;
+    private Double discount;
 
-  public String imageUri;
+    @Size(min = 5, max = 90)
+    private String description;
 
-  @NotNull
-  public Boolean active;
+    private String imageUri;
 
-  public String getName() {
-    return this.name;
-  }
+    private EnumPlateSize plateSize;
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    private Boolean active;
 
-  public Double getPrice() {
-    return this.price;
-  }
+    public String getName() {
+        return this.name;
+    }
 
-  public void setPrice(Double price) {
-    this.price = price;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getDescription() {
-    return this.description;
-  }
+    public Double getPrice() {
+        return this.price;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-  public String getImageUri() {
-    return this.imageUri;
-  }
+    public Double getDiscount() {
+        return this.discount;
+    }
 
-  public void setImageUri(String imageUri) {
-    this.imageUri = imageUri;
-  }
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
 
-  public Boolean getActive() {
-    return this.active;
-  }
+    public String getDescription() {
+        return this.description;
+    }
 
-  public void setActive(Boolean active) {
-    this.active = active;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUri() {
+        return this.imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public Boolean getActive() {
+        return this.active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public EnumPlateSize getPlateSize() {
+        return this.plateSize;
+    }
+
+    public void setPlateSize(EnumPlateSize plateSize) {
+        this.plateSize = plateSize;
+    }
 
 }

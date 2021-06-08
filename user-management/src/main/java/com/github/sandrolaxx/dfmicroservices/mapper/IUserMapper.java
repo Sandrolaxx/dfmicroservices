@@ -10,15 +10,16 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "cdi")
 public interface IUserMapper {
 
-  @Mapping(target = "id", ignore = true)
-  @Mapping(target = "createdAt", ignore = true)
-  @Mapping(target = "updatedAt", ignore = true)
-  public User listUserDtoToUser(ListUserDto dto);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "secret", ignore = true)
+    public User listUserDtoToUser(ListUserDto dto);
 
-  public User createUserDtoToUser(CreateUserDto dto);
+    public User createUserDtoToUser(CreateUserDto dto);
 
-  @Mapping(target = "createdAt", dateFormat = "dd/MM/yyyy HH:mm:ss")
-  @Mapping(target = "updatedAt", dateFormat = "dd/MM/yyyy HH:mm:ss")
-  public ListUserDto toListUserDto(User user);
+    @Mapping(target = "createdAt", dateFormat = "dd/MM/yyyy HH:mm:ss")
+    @Mapping(target = "updatedAt", dateFormat = "dd/MM/yyyy HH:mm:ss")
+    public ListUserDto toListUserDto(User user);
 
 }

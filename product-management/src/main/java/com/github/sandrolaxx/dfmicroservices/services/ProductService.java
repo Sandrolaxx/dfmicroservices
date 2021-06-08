@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.validation.Valid; 
+import javax.validation.Valid;
 import javax.ws.rs.NotFoundException;
 
 import com.github.sandrolaxx.dfmicroservices.dto.ProductCreateDto;
@@ -20,51 +20,62 @@ import org.eclipse.microprofile.opentracing.Traced;
 @ApplicationScoped
 @Traced(operationName = "ProductService")
 public class ProductService {
-  
-  @Inject
-  IProductMapper mapper;
 
-  public List<ProductListDto> findAll() {
-    List<Product> productList = Product.listAll();
+    @Inject
+    IProductMapper mapper;
 
-    return productList.stream()
-                      .map(p -> mapper.toProductListDto(p))
-                      .collect(Collectors.toList());
-  }
+    public List<ProductListDto> findAll() {
+        
+        List<Product> productList = Product.listAll();
 
-  @Transactional()
-  public Product persistProduct(@Valid ProductCreateDto dto) {
-    Product product = mapper.productCreateDtoToProduct(dto);
+        return productList.stream()
+                          .map(p -> mapper.toProductListDto(p))
+                          .collect(Collectors.toList());
 
-    product.persist();
-
-    return product;
-  }
-
-  @Transactional()
-  public void updateProduct(Integer id,@Valid ProductCreateDto dto) {
-    Optional<Product> oldProduct = Product.findByIdOptional(id);
-
-    if (!oldProduct.isPresent()) {
-      throw new NotFoundException();
     }
 
-    var newProduct = oldProduct.get();
-    newProduct.name = dto.name;
-    newProduct.price = dto.price;
-    newProduct.description = dto.description;
-    newProduct.imageUri = dto.imageUri;
-    newProduct.active = dto.active;
+    @Transactional()
+    public Product persistProduct(@Valid ProductCreateDto dto) {
+        
+        Product product = mapper.productCreateDtoToProduct(dto);
 
-    newProduct.persist();
-  }
+        product.persist();
 
-  @Transactional()
-  public void deleteProduct(Integer id) {
-    Optional<Product> productToDelete = Product.findByIdOptional(id);
+        return product;
 
-    productToDelete.ifPresentOrElse(Product::delete, () -> {
-      throw new NotFoundException();
-    });
-  }
+    }
+
+    @Transactional()
+    public void updateProduct(Integer id, @Valid ProductCreateDto dto) {
+        
+        Optional<Product> existsProduct = Product.findByIdOptional(id);
+
+        if (!existsProduct.isPresent()) {
+            throw new NotFoundException();
+        }
+
+        var oldProduct = existsProduct.get();
+        var newProduct = existsProduct.get();
+
+        newProduct.setName(dto.getName() == null ? oldProduct.getName() : dto.getName());
+        newProduct.setPrice(dto.getPrice() == null ? oldProduct.getPrice() : dto.getPrice());
+        newProduct.setDiscount(dto.getDiscount() == null ? oldProduct.getDiscount() : dto.getDiscount());
+        newProduct.setDescription(dto.getDescription() == null ? oldProduct.getDescription() : dto.getDescription());
+        newProduct.setImageUri(dto.getImageUri() == null ? oldProduct.getImageUri() : dto.getDescription());
+        newProduct.setActive(dto.getActive() == null ? oldProduct.getActive() : dto.getActive());
+
+        newProduct.persist();
+
+    }
+
+    @Transactional()
+    public void deleteProduct(Integer id) {
+        
+        Optional<Product> productToDelete = Product.findByIdOptional(id);
+
+        productToDelete.ifPresentOrElse(Product::delete, () -> {
+            throw new NotFoundException();
+        });
+
+    }
 }

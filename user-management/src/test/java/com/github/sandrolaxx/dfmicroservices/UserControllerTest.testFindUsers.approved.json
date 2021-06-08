@@ -3,7 +3,6 @@
     "active": true,
     "address": [
       {
-        "active": true,
         "city": "Cascavel",
         "district": "Interlagos",
         "id": 1,
@@ -28,7 +27,6 @@
     "active": true,
     "address": [
       {
-        "active": true,
         "city": "Cascavel",
         "district": "Centro",
         "id": 2,
@@ -54,7 +52,6 @@
     "active": true,
     "address": [
       {
-        "active": true,
         "city": "Cascavel",
         "district": "Interlagos",
         "id": 3,

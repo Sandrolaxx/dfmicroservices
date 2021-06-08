@@ -1,85 +1,107 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
+
 public class ProductListDto {
 
-  public Long id;
+    public Long id;
 
-  public String name;
+    public String name;
 
-  public Double price;
+    public Double price;
 
-  public String description;
+    public Double discount;
 
-  public String imageUri;
+    public String description;
 
-  public Boolean active;
+    public String imageUri;
 
-  public String createdAt;
+    public Boolean active;
 
-  public String updatedAt;
+    private EnumPlateSize plateSize;
 
-  public Long getId() {
-    return this.id;
-  }
+    public String createdAt;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public String updatedAt;
 
-  public String getName() {
-    return this.name;
-  }
+    public Long getId() {
+        return this.id;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public Double getPrice() {
-    return this.price;
-  }
+    public String getName() {
+        return this.name;
+    }
 
-  public void setPrice(Double price) {
-    this.price = price;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getDescription() {
-    return this.description;
-  }
+    public Double getPrice() {
+        return this.price;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-  public String getImageUri() {
-    return this.imageUri;
-  }
+    public String getDescription() {
+        return this.description;
+    }
 
-  public void setImageUri(String imageUri) {
-    this.imageUri = imageUri;
-  }
+    public Double getDiscount() {
+        return this.discount;
+    }
 
-  public Boolean getActive() {
-    return this.active;
-  }
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
 
-  public void setActive(Boolean active) {
-    this.active = active;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public String getCreatedAt() {
-    return this.createdAt;
-  }
+    public String getImageUri() {
+        return this.imageUri;
+    }
 
-  public void setCreatedAt(String createdAt) {
-    this.createdAt = createdAt;
-  }
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
 
-  public String getUpdatedAt() {
-    return this.updatedAt;
-  }
+    public Boolean getActive() {
+        return this.active;
+    }
 
-  public void setUpdatedAt(String updatedAt) {
-    this.updatedAt = updatedAt;
-  }
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public EnumPlateSize getPlateSize() {
+        return this.plateSize;
+    }
+
+    public void setPlateSize(EnumPlateSize plateSize) {
+        this.plateSize = plateSize;
+    }
+
+    public String getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
 }

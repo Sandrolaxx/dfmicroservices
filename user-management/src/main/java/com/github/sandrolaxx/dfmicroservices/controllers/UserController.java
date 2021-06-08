@@ -36,8 +36,8 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 @Path("/dona-frost/v1/user")
 @Tag(name = "User")
 @RolesAllowed("dfmicroservices")
-@SecurityScheme(securitySchemeName = "df-product-oauth", type = SecuritySchemeType.OAUTH2, flows = @OAuthFlows(password = 
-@OAuthFlow(tokenUrl = "http://localhost:9091/auth/realms/dfmicroservices/protocol/openid-connect/token")))
+@SecurityScheme(securitySchemeName = "df-product-oauth", type = SecuritySchemeType.OAUTH2, flows = 
+@OAuthFlows(password = @OAuthFlow(tokenUrl = "http://localhost:9091/auth/realms/dfmicroservices/protocol/openid-connect/token")))
 public class UserController {
 
     @Inject
@@ -45,8 +45,7 @@ public class UserController {
 
     @Inject
     @Channel("user")
-    Emitter <User>emitter;
-  
+    Emitter<User> emitter;
 
     @GET
     @APIResponse(responseCode = "200", description = "Caso sucesso, retorna a lista de usuários")

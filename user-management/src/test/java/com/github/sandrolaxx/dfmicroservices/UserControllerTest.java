@@ -78,7 +78,6 @@ public class UserControllerTest {
         List<CreateAddressDto> addressList = new ArrayList<>();
         CreateAddressDto addressDto = new CreateAddressDto();
 
-        addressDto.setActive(true);
         addressDto.setState("PR");
         addressDto.setCity("Londrina");
         addressDto.setDistrict("Bairro jardim XX");

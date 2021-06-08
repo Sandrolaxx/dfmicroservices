@@ -114,9 +114,9 @@ public class ProductControllerTest {
 
         Product findById = Product.findById(idProductToChange);
         
-        Assert.assertEquals(dto.name, findById.name);
-        Assert.assertEquals(dto.description, findById.description);
-        Assert.assertEquals(dto.price, findById.price);
+        Assert.assertEquals(dto.getName(), findById.getName());
+        Assert.assertEquals(dto.getDescription(),findById.getDescription());
+        Assert.assertEquals(dto.getPrice(), findById.getPrice());
     }
 
     @Test

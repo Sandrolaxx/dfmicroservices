@@ -40,6 +40,9 @@ public class ProductCart extends PanacheEntityBase {
   @Column(name = "QUANTITY")
   public int quantity;
 
+  @Column(name = "REMOVED")
+  private boolean removed;
+  
   @CreationTimestamp
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "CREATED_AT")
@@ -49,9 +52,6 @@ public class ProductCart extends PanacheEntityBase {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "UPDATED_AT")
   public Date updatedAt;
-
-  @Column(name = "REMOVED")
-  private boolean removed;
 
   public ProductCart() {
   }

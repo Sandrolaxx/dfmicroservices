@@ -19,52 +19,50 @@ import org.eclipse.microprofile.opentracing.Traced;
 
 @ApplicationScoped
 @Traced(operationName = "UserService")
-public class UserService { 
+public class UserService {
 
-  @Inject
-  IUserMapper userMapper;
+    @Inject
+    IUserMapper userMapper;
 
-  public List<ListUserDto> findAll() {
-    List<User> userList = User.listAll();
+    public List<ListUserDto> findAll() {
+        List<User> userList = User.listAll();
 
-    return userList.stream()
-                      .map(p -> userMapper.toListUserDto(p))
-                      .collect(Collectors.toList());
-  }
-
-  @Transactional()
-  public User persistUser(CreateUserDto dto) {
-    User newUser = userMapper.createUserDtoToUser(dto);
-
-    newUser.persist();
-
-    return newUser;
-  }
-
-  @Transactional()
-  public void updateUser(Integer id,@Valid CreateUserDto dto) {
-    Optional<User> oldUser = User.findByIdOptional(id);
-
-    if (!oldUser.isPresent()) {
-      throw new NotFoundException();
+        return userList.stream().map(p -> userMapper.toListUserDto(p)).collect(Collectors.toList());
     }
 
-    var updateUserInfo = oldUser.get();
-    updateUserInfo.name = dto.name;
-    updateUserInfo.email = dto.email;
-    updateUserInfo.password = dto.password;
-    updateUserInfo.document = dto.document;
-    updateUserInfo.phone = dto.phone;
+    @Transactional()
+    public User persistUser(CreateUserDto dto) {
+        User newUser = userMapper.createUserDtoToUser(dto);
 
-    updateUserInfo.persist();
-  }
+        newUser.persist();
 
-  @Transactional()
-  public void deleteUser(Integer id) {
-    Optional<User> productToDelete = User.findByIdOptional(id);
+        return newUser;
+    }
 
-    productToDelete.ifPresentOrElse(User::delete, () -> {
-      throw new NotFoundException();
-    });
-  }
-}  
+    @Transactional()
+    public void updateUser(Integer id, @Valid CreateUserDto dto) {
+        Optional<User> oldUser = User.findByIdOptional(id);
+
+        if (!oldUser.isPresent()) {
+            throw new NotFoundException();
+        }
+
+        var updateUserInfo = oldUser.get();
+        updateUserInfo.name = dto.name;
+        updateUserInfo.email = dto.email;
+        updateUserInfo.password = dto.password;
+        updateUserInfo.document = dto.document;
+        updateUserInfo.phone = dto.phone;
+
+        updateUserInfo.persist();
+    }
+
+    @Transactional()
+    public void deleteUser(Integer id) {
+        Optional<User> productToDelete = User.findByIdOptional(id);
+
+        productToDelete.ifPresentOrElse(User::delete, () -> {
+            throw new NotFoundException();
+        });
+    }
+}

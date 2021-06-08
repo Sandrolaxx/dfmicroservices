@@ -22,8 +22,11 @@ public class Product extends PanacheEntityBase {
   public String name;
   
   @Column(name = "PRICE")
-  public Double price; 
+  public Double price;
   
+  @Column(name = "DISCOUNT")
+  public Double discount;
+
   @Column(name = "DESCRIPTION")
   public String description;
   
@@ -45,6 +48,7 @@ public class Product extends PanacheEntityBase {
   public Product(ProductDto dto) {
     name = dto.getName();
     price = dto.getPrice();
+    discount = dto.getDiscount();
     description = dto.getDescription();
     imageUri = dto.getImageUri();
     active = dto.getActive();
@@ -72,6 +76,14 @@ public class Product extends PanacheEntityBase {
 
   public void setPrice(Double price) {
     this.price = price;
+  }
+
+  public Double getDiscount() {
+    return this.discount;
+  }
+
+  public void setDiscount(Double discount) {
+    this.discount = discount;
   }
 
   public String getDescription() {

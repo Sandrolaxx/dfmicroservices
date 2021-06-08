@@ -7,15 +7,14 @@ import javax.validation.ConstraintViolationException;
 
 public class ErrorResponse {
 
-  private final List<ErrorResponseImpl> errors = new ArrayList<>();
+    private final List<ErrorResponseImpl> errors = new ArrayList<>();
 
-  private ErrorResponse(ConstraintViolationException exception) {
-    exception.getConstraintViolations().forEach(violation -> 
-    errors.add(ErrorResponseImpl.of(violation)));
-  }
+    private ErrorResponse(ConstraintViolationException exception) {
+        exception.getConstraintViolations().forEach(violation -> errors.add(ErrorResponseImpl.of(violation)));
+    }
 
-  public static ErrorResponse of(ConstraintViolationException exception) {
-    return new ErrorResponse(exception);
-  }
+    public static ErrorResponse of(ConstraintViolationException exception) {
+        return new ErrorResponse(exception);
+    }
 
 }

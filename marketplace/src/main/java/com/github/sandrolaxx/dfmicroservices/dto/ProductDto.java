@@ -4,65 +4,76 @@ import com.github.sandrolaxx.dfmicroservices.entities.Product;
 
 public class ProductDto {
 
-  public String name;
+    public String name;
 
-  public Double price;
+    public Double price;
 
-  public String description;
+    public Double discount;
 
-  public String imageUri;
+    public String description;
 
-  public Boolean active;
+    public String imageUri;
 
-  public ProductDto(){
-  }
+    public Boolean active;
 
-  public ProductDto (Product entity){
-    name = entity.getName();
-    price = entity.getPrice();
-    description = entity.getDescription();
-    imageUri = entity.getImageUri();
-    active = entity.getActive();
-  }
+    public ProductDto() {
+    }
 
-  public String getName() {
-    return this.name;
-  }
+    public ProductDto(Product entity) {
+        name = entity.getName();
+        price = entity.getPrice();
+        discount = entity.getDiscount();
+        description = entity.getDescription();
+        imageUri = entity.getImageUri();
+        active = entity.getActive();
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return this.name;
+    }
 
-  public Double getPrice() {
-    return this.price;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setPrice(Double price) {
-    this.price = price;
-  }
+    public Double getPrice() {
+        return this.price;
+    }
 
-  public String getDescription() {
-    return this.description;
-  }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public Double getDiscount() {
+        return this.discount;
+    }
 
-  public String getImageUri() {
-    return this.imageUri;
-  }
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
 
-  public void setImageUri(String imageUri) {
-    this.imageUri = imageUri;
-  }
+    public String getDescription() {
+        return this.description;
+    }
 
-  public Boolean getActive() {
-    return this.active;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public void setActive(Boolean active) {
-    this.active = active;
-  }
+    public String getImageUri() {
+        return this.imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public Boolean getActive() {
+        return this.active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
 }

@@ -19,22 +19,19 @@ import io.vertx.core.json.JsonObject;
 @ApplicationScoped
 @ActivateRequestContext
 public class UserRegister {
-  
-  @Inject
-  Mutiny.Session mutinySession;
-  
-  @Incoming("user")
-  @Transactional
-  @Blocking
-  public void receivedProduct(JsonObject userPropagated) throws JsonMappingException, JsonProcessingException {
 
-    ObjectMapper m = new ObjectMapper();
-    User newUser = m.readValue(userPropagated.toString(), User.class);
-    
-    mutinySession.persist(newUser)
-        .chain(mutinySession::flush)
-        .await()
-        .indefinitely();
-    
-  }
+    @Inject
+    Mutiny.Session mutinySession;
+
+    @Incoming("user")
+    @Transactional
+    @Blocking
+    public void receivedProduct(JsonObject userPropagated) throws JsonMappingException, JsonProcessingException {
+
+        ObjectMapper m = new ObjectMapper();
+        User newUser = m.readValue(userPropagated.toString(), User.class);
+
+        mutinySession.persist(newUser).chain(mutinySession::flush).await().indefinitely();
+
+    }
 }
