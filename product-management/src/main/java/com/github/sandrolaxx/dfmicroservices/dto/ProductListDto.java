@@ -4,25 +4,25 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 public class ProductListDto {
 
-    public Long id;
+    private Long id;
 
-    public String name;
+    private String name;
 
-    public Double price;
+    private Double price;
 
-    public Double discount;
+    private Double discount;
 
-    public String description;
+    private String description;
 
-    public String imageUri;
+    private String imageUri;
 
-    public Boolean active;
+    private Boolean active;
 
     private EnumPlateSize plateSize;
 
-    public String createdAt;
+    private String createdAt;
 
-    public String updatedAt;
+    private String updatedAt;
 
     public Long getId() {
         return this.id;

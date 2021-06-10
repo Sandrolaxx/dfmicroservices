@@ -119,9 +119,7 @@ public class UserControllerTest {
         dto.setName("Roberto");
         dto.setDocument("10564574902");
         dto.setEmail("teste@hotmail.com");
-        dto.setPassword("12222");
-        dto.setPhone("12564588885");;
-        dto.setActive(true);
+        dto.setPhone("12564588885");
 
         Integer idUserToChange = 1;
 
@@ -135,11 +133,11 @@ public class UserControllerTest {
 
         User findById = User.findById(idUserToChange);
         
-        Assert.assertEquals(dto.name, findById.name);
-        Assert.assertEquals(dto.document, findById.document);
-        Assert.assertEquals(dto.email, findById.email);
-        Assert.assertEquals(dto.phone, findById.phone);
-        Assert.assertEquals(dto.password, findById.password);
+        Assert.assertEquals(dto.getName(), findById.getName());
+        Assert.assertEquals(dto.getDocument(), findById.getDocument());
+        Assert.assertEquals(dto.getEmail(), findById.getEmail());
+        Assert.assertEquals(dto.getPhone(), findById.getPhone());
+
     }
 
     @Test

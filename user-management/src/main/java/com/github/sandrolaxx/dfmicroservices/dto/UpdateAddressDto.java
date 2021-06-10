@@ -1,8 +1,6 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
-public class ListAddressDto {
-
-    private Integer id;
+public class UpdateAddressDto {
 
     private String state;
 
@@ -21,14 +19,6 @@ public class ListAddressDto {
     private Double longitude;
 
     private boolean main;
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getState() {
         return this.state;
@@ -94,7 +84,7 @@ public class ListAddressDto {
         this.longitude = longitude;
     }
 
-    public boolean getMain() {
+    public boolean isMain() {
         return this.main;
     }
 

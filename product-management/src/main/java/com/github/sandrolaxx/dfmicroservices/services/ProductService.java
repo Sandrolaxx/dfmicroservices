@@ -55,16 +55,16 @@ public class ProductService {
         }
 
         var oldProduct = existsProduct.get();
-        var newProduct = existsProduct.get();
+        var updatedProduct = existsProduct.get();
 
-        newProduct.setName(dto.getName() == null ? oldProduct.getName() : dto.getName());
-        newProduct.setPrice(dto.getPrice() == null ? oldProduct.getPrice() : dto.getPrice());
-        newProduct.setDiscount(dto.getDiscount() == null ? oldProduct.getDiscount() : dto.getDiscount());
-        newProduct.setDescription(dto.getDescription() == null ? oldProduct.getDescription() : dto.getDescription());
-        newProduct.setImageUri(dto.getImageUri() == null ? oldProduct.getImageUri() : dto.getDescription());
-        newProduct.setActive(dto.getActive() == null ? oldProduct.getActive() : dto.getActive());
+        updatedProduct.setName(dto.getName() == null ? oldProduct.getName() : dto.getName());
+        updatedProduct.setPrice(dto.getPrice() == null ? oldProduct.getPrice() : dto.getPrice());
+        updatedProduct.setDiscount(dto.getDiscount() == null ? oldProduct.getDiscount() : dto.getDiscount());
+        updatedProduct.setDescription(dto.getDescription() == null ? oldProduct.getDescription() : dto.getDescription());
+        updatedProduct.setImageUri(dto.getImageUri() == null ? oldProduct.getImageUri() : dto.getDescription());
+        updatedProduct.setActive(dto.getActive() == null ? oldProduct.getActive() : dto.getActive());
 
-        newProduct.persist();
+        updatedProduct.persist();
 
     }
 
@@ -78,4 +78,5 @@ public class ProductService {
         });
 
     }
+    
 }

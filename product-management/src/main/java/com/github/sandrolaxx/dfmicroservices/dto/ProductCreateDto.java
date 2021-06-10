@@ -7,7 +7,7 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 public class ProductCreateDto {
 
-    @Size(min = 3, max = 60)
+    @Size(min = 3, max = 80)
     private String name;
 
     @Positive
@@ -15,7 +15,7 @@ public class ProductCreateDto {
 
     private Double discount;
 
-    @Size(min = 5, max = 90)
+    @Size(min = 5, max = 120)
     private String description;
 
     private String imageUri;

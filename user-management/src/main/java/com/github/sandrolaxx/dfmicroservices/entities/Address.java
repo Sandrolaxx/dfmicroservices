@@ -1,6 +1,7 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,48 +25,52 @@ public class Address extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
-    public User user;
+    private User user;
 
     @Column(name = "STATE")
-    public String state;
+    private String state;
 
     @Column(name = "CITY")
-    public String city;
+    private String city;
 
     @Column(name = "DISTRICT")
-    public String district;
+    private String district;
 
     @Column(name = "STREET")
-    public String street;
+    private String street;
 
     @Column(name = "NUMBER")
-    public Integer number;
+    private Integer number;
 
     @Column(name = "NUMBER_AP")
-    public Integer numberAp;
+    private Integer numberAp;
 
     @Column(name = "MAIN")
-    public boolean main;
+    private boolean main;
 
     @Column(name = "LATITUDE")
-    public Double latitude;
+    private Double latitude;
 
     @Column(name = "LONGITUDE")
-    public Double longitude;
+    private Double longitude;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_AT")
-    public Date createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATED_AT")
-    public Date updatedAt;
+    private Date updatedAt;
+
+    public static List<Address> findByUser(User user) {
+        return find("user", user).list();
+    }
 
     public Integer getId() {
         return this.id;

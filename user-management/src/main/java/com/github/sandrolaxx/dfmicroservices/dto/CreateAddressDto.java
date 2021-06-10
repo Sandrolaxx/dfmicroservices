@@ -2,23 +2,23 @@ package com.github.sandrolaxx.dfmicroservices.dto;
 
 public class CreateAddressDto {
 
-    public String state;
+    private String state;
 
-    public String city;
+    private String city;
 
-    public String district;
+    private String district;
 
-    public String street;
+    private String street;
 
-    public Integer number;
+    private Integer number;
 
-    public Integer numberAp;
+    private Integer numberAp;
 
-    public Double latitude;
+    private Double latitude;
 
-    public Double longitude;
+    private Double longitude;
 
-    public boolean main;
+    private boolean main;
 
     public String getState() {
         return this.state;

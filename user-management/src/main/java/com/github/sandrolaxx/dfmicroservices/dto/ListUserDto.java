@@ -4,25 +4,27 @@ import java.util.List;
 
 public class ListUserDto {
 
-    public Integer id;
+    private Integer id;
 
-    public String name;
+    private String name;
 
-    public String email;
+    private String email;
 
-    public String password;
+    private String password;
 
-    public String document;
+    private String document;
 
-    public String phone;
+    private String phone;
 
-    public boolean active;
+    private boolean active;
 
-    public List<ListAddressDto> address;
+    private boolean acceptTerms;
 
-    public String createdAt;
+    private List<ListAddressDto> address;
 
-    public String updatedAt;
+    private String createdAt;
+
+    private String updatedAt;
 
     public Integer getId() {
         return this.id;
@@ -78,6 +80,14 @@ public class ListUserDto {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+    
+    public boolean isAcceptTerms() {
+        return this.acceptTerms;
+    }
+
+    public void setAcceptTerms(boolean acceptTerms) {
+        this.acceptTerms = acceptTerms;
     }
 
     public List<ListAddressDto> getAddress() {

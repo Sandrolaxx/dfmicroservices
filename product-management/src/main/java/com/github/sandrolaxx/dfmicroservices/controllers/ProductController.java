@@ -72,6 +72,7 @@ public class ProductController {
         emitter.send(newProduct);
 
         return Response.status(Status.CREATED).build();
+        
     }
 
     @PUT
@@ -87,4 +88,5 @@ public class ProductController {
     public void deleteProduct(@HeaderParam("id") Integer id) {
         productService.deleteProduct(id);
     }
+    
 }

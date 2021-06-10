@@ -4,17 +4,20 @@ import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.github.sandrolaxx.dfmicroservices.dto.CreateUserDto;
 import com.github.sandrolaxx.dfmicroservices.dto.ListUserDto;
+import com.github.sandrolaxx.dfmicroservices.dto.UpdateAddressDto;
+import com.github.sandrolaxx.dfmicroservices.dto.UpdateUserDto;
 import com.github.sandrolaxx.dfmicroservices.entities.User;
 import com.github.sandrolaxx.dfmicroservices.services.UserService;
 import com.github.sandrolaxx.dfmicroservices.utils.ErrorResponse;
@@ -50,7 +53,6 @@ public class UserController {
     @GET
     @APIResponse(responseCode = "200", description = "Caso sucesso, retorna a lista de usuários")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
-    // Metrics - Prometheus
     @Counted(name = "Quantidade chamadas listagem usuários")
     @SimplyTimed(name = "Tempo simples/médio de busca")
     @Timed(name = "Tempo completo da busca")
@@ -61,27 +63,45 @@ public class UserController {
     @POST
     @APIResponse(responseCode = "201", description = "Caso seja cadastrado com sucesso.")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
-    public Response addProduct(CreateUserDto dto) {
+    public Response addUser(@Valid CreateUserDto dto) {
+
         User newUser = userService.persistUser(dto);
 
         emitter.send(newUser);
 
         return Response.status(Status.CREATED).build();
+
     }
 
     @PUT
-    @Path("{id}")
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
-    public void updateProduct(@PathParam("id") Integer id, CreateUserDto dto) {
-        userService.updateUser(id, dto);
+    public void updateUser(@HeaderParam("idUser") Integer idUser, @Valid UpdateUserDto dto) {
+        userService.updateUser(idUser, dto);
     }
 
     @DELETE
-    @Path("{id}")
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
-    public void deleteProduct(@PathParam("id") Integer id) {
-        userService.deleteUser(id);
+    public void deleteUser(@HeaderParam("idUser") Integer idUser) {
+        userService.deleteUser(idUser);
     }
+
+    @PUT
+    @Path("/address")
+    @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
+    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
+    public void updateAddres(@HeaderParam("idUser") Integer idUser, @HeaderParam("idAddress") Integer idAddress,
+            UpdateAddressDto dto) {
+        userService.updateAddress(idUser, idAddress, dto);
+    }
+
+    @DELETE
+    @Path("/address")
+    @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
+    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
+    public void deleteAddress(@HeaderParam("idUser") Integer idUser, @HeaderParam("idAddress") Integer idAddress) {
+        userService.deleteAddress(idUser, idAddress);
+    }
+
 }

@@ -27,42 +27,45 @@ public class User extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+    private Integer id;
 
     @Column(name = "NAME")
-    public String name;
+    private String name;
 
     @Column(name = "EMAIL")
-    public String email;
+    private String email;
 
     @Column(name = "PASSWORD")
-    public String password;
+    private String password;
 
     @Column(name = "DOCUMENT")
-    public String document;
+    private String document;
 
     @Column(name = "PHONE")
-    public String phone;
+    private String phone;
 
     @Column(name = "ACTIVE")
-    public boolean active;
+    private boolean active;
+
+    @Column(name = "ACCEPT_TERMS")
+    private boolean acceptTerms;
 
     @Column(name = "SECRET")
-    public String secret;
+    private String secret;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_USER")
-    public List<Address> address;
+    private List<Address> address;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_AT")
-    public Date createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATED_AT")
-    public Date updatedAt;
+    private Date updatedAt;
 
     public User() {
         super();
@@ -131,6 +134,14 @@ public class User extends PanacheEntityBase {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isAcceptTerms() {
+        return this.acceptTerms;
+    }
+
+    public void setAcceptTerms(boolean acceptTerms) {
+        this.acceptTerms = acceptTerms;
     }
 
     public List<Address> getAddress() {
