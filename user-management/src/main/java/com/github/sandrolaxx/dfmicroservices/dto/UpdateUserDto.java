@@ -1,22 +1,15 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
-
 public class UpdateUserDto {
 
     private String name;
 
-    @Email
     private String email;
 
-    @Size(min = 5)
     private String password;
 
-    @Size(max = 14)
     private String document;
 
-    @Size(max = 15)
     private String phone;
 
     private boolean active;

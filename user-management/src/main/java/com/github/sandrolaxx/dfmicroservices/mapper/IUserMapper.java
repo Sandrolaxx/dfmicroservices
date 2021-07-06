@@ -1,7 +1,9 @@
 package com.github.sandrolaxx.dfmicroservices.mapper;
 
+import com.github.sandrolaxx.dfmicroservices.dto.CreateAddressDto;
 import com.github.sandrolaxx.dfmicroservices.dto.CreateUserDto;
 import com.github.sandrolaxx.dfmicroservices.dto.ListUserDto;
+import com.github.sandrolaxx.dfmicroservices.entities.Address;
 import com.github.sandrolaxx.dfmicroservices.entities.User;
 
 import org.mapstruct.Mapper;
@@ -16,10 +18,13 @@ public interface IUserMapper {
     @Mapping(target = "secret", ignore = true)
     public User listUserDtoToUser(ListUserDto dto);
 
+    @Mapping(target = "address", ignore = true)
     public User createUserDtoToUser(CreateUserDto dto);
 
     @Mapping(target = "createdAt", dateFormat = "dd/MM/yyyy HH:mm:ss")
     @Mapping(target = "updatedAt", dateFormat = "dd/MM/yyyy HH:mm:ss")
     public ListUserDto toListUserDto(User user);
+
+    public Address addressDtoToEntity(CreateAddressDto dto); 
 
 }

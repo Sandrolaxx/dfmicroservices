@@ -4,10 +4,16 @@ import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.github.sandrolaxx.dfmicroservices.dto.ProductDto;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 
@@ -15,99 +21,151 @@ import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 @Table(name = "DF_PRODUCT")
 public class Product extends PanacheEntityBase {
 
-  @Id
-  public Integer id;
+    @Id
+    private Integer id;
 
-  @Column(name = "NAME")
-  public String name;
-  
-  @Column(name = "PRICE")
-  public Double price;
-  
-  @Column(name = "DISCOUNT")
-  public Double discount;
+    @Column(name = "NAME")
+    private String name;
 
-  @Column(name = "DESCRIPTION")
-  public String description;
-  
-  @Column(name = "IMAGE_URI")
-  public String imageUri;
+    @Column(name = "PRICE")
+    private Double price;
 
-  @Column(name = "ACTIVE")
-  public Boolean active;
+    @Column(name = "DISCOUNT")
+    private Double discount;
 
-  @Column(name = "CREATED_AT")
-  public Date createdAt;
+    @Column(name = "DESCRIPTION")
+    private String description;
 
-  @Column(name = "UPDATED_AT")
-  public Date updatedAt;
+    @Column(name = "IMAGE_URI")
+    private String imageUri;
 
-  public Product() {
-  }
+    @Column(name = "ACTIVE")
+    private Boolean active;
 
-  public Product(ProductDto dto) {
-    name = dto.getName();
-    price = dto.getPrice();
-    discount = dto.getDiscount();
-    description = dto.getDescription();
-    imageUri = dto.getImageUri();
-    active = dto.getActive();
-  }
+    @Column(name = "PLATE_SIZE")
+    @Enumerated(EnumType.STRING)
+    private EnumPlateSize plateSize;
 
-  public Integer getId() {
-    return this.id;
-  }
+    @Column(name = "CATEGORY")
+    @Enumerated(EnumType.STRING)
+    private EnumPlateCategory category;
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    @Column(name = "CREATED_AT")
+    private Date createdAt;
 
-  public String getName() {
-    return this.name;
-  }
+    @Column(name = "UPDATED_AT")
+    private Date updatedAt;
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    @Transient
+    private EnumMessageType messageType;
 
-  public Double getPrice() {
-    return this.price;
-  }
+    public Product() {
+    }
 
-  public void setPrice(Double price) {
-    this.price = price;
-  }
+    public Product(ProductDto dto) {
+        name = dto.getName();
+        price = dto.getPrice();
+        discount = dto.getDiscount();
+        description = dto.getDescription();
+        imageUri = dto.getImageUri();
+        active = dto.getActive();
+        plateSize = dto.getPlateSize();
+    }
 
-  public Double getDiscount() {
-    return this.discount;
-  }
+    public Integer getId() {
+        return this.id;
+    }
 
-  public void setDiscount(Double discount) {
-    this.discount = discount;
-  }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-  public String getDescription() {
-    return this.description;
-  }
+    public String getName() {
+        return this.name;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getImageUri() {
-    return this.imageUri;
-  }
+    public Double getPrice() {
+        return this.price;
+    }
 
-  public void setImageUri(String imageUri) {
-    this.imageUri = imageUri;
-  }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
-  public Boolean getActive() {
-    return this.active;
-  }
+    public Double getDiscount() {
+        return this.discount;
+    }
 
-  public void setActive(Boolean active) {
-    this.active = active;
-  }
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUri() {
+        return this.imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public Boolean getActive() {
+        return this.active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public EnumPlateSize getPlateSize() {
+        return this.plateSize;
+    }
+
+    public void setPlateSize(EnumPlateSize plateSize) {
+        this.plateSize = plateSize;
+    }
+
+    public EnumPlateCategory getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(EnumPlateCategory category) {
+        this.category = category;
+    }
+
+    public Date getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public EnumMessageType getMessageType() {
+        return this.messageType;
+    }
+
+    public void setMessageType(EnumMessageType messageType) {
+        this.messageType = messageType;
+    }
 
 }

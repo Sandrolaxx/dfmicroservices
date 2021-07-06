@@ -6,14 +6,20 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
+import com.github.sandrolaxx.dfmicroservices.utils.EncryptUtil;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -53,7 +59,7 @@ public class User extends PanacheEntityBase {
     @Column(name = "SECRET")
     private String secret;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_USER")
     private List<Address> address;
 
@@ -66,6 +72,18 @@ public class User extends PanacheEntityBase {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATED_AT")
     private Date updatedAt;
+
+    @Transient
+    private EnumMessageType messageType;
+
+    @PrePersist
+    private void encryptSensitiveData() {
+        this.document = EncryptUtil.textEncrypt(this.document, secret.substring(0, 16));
+        this.email = EncryptUtil.textEncrypt(this.email, secret.substring(0, 16));
+        this.password = EncryptUtil.textEncrypt(this.password, secret.substring(0, 16));
+        this.phone = EncryptUtil.textEncrypt(this.phone, secret.substring(0, 16));
+        this.name = EncryptUtil.textEncrypt(this.name, secret.substring(0, 16));
+    }
 
     public User() {
         super();
@@ -166,6 +184,14 @@ public class User extends PanacheEntityBase {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public EnumMessageType getMessageType() {
+        return this.messageType;
+    }
+
+    public void setMessageType(EnumMessageType messageType) {
+        this.messageType = messageType;
     }
 
 }

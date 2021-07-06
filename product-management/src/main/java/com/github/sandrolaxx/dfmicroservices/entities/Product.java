@@ -4,13 +4,18 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -45,7 +50,12 @@ public class Product extends PanacheEntityBase {
     private Boolean active;
 
     @Column(name = "PLATE_SIZE")
+    @Enumerated(EnumType.STRING)
     private EnumPlateSize plateSize;
+
+    @Column(name = "CATEGORY")
+    @Enumerated(EnumType.STRING)
+    private EnumPlateCategory category;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,6 +66,9 @@ public class Product extends PanacheEntityBase {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATED_AT")
     private Date updatedAt;
+
+    @Transient
+    private EnumMessageType messageType;
 
     public Integer getId() {
         return this.id;
@@ -121,6 +134,14 @@ public class Product extends PanacheEntityBase {
         this.plateSize = plateSize;
     }
 
+    public EnumPlateCategory getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(EnumPlateCategory category) {
+        this.category = category;
+    }
+
     public Date getCreatedAt() {
         return this.createdAt;
     }
@@ -135,6 +156,14 @@ public class Product extends PanacheEntityBase {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public EnumMessageType getMessageType() {
+        return this.messageType;
+    }
+
+    public void setMessageType(EnumMessageType messageType) {
+        this.messageType = messageType;
     }
 
 }

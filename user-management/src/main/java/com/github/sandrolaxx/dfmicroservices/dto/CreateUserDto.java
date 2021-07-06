@@ -1,31 +1,22 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
-import java.util.List;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
-
 public class CreateUserDto {
 
     private String name;
 
-    @Email
     private String email;
 
-    @Size(min = 5)
     private String password;
 
-    @Size(max = 14)
     private String document;
 
-    @Size(max = 15)
     private String phone;
 
     private boolean active;
 
     private boolean acceptTerms;
 
-    private List<CreateAddressDto> address;
+    private CreateAddressDto address;
 
     public String getName() {
         return this.name;
@@ -83,11 +74,11 @@ public class CreateUserDto {
         this.acceptTerms = acceptTerms;
     }
 
-    public List<CreateAddressDto> getAddress() {
+    public CreateAddressDto getAddress() {
         return this.address;
     }
 
-    public void setAddress(List<CreateAddressDto> address) {
+    public void setAddress(CreateAddressDto address) {
         this.address = address;
     }
 

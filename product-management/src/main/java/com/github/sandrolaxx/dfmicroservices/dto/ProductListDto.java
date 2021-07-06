@@ -1,5 +1,6 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 public class ProductListDto {
@@ -19,6 +20,8 @@ public class ProductListDto {
     private Boolean active;
 
     private EnumPlateSize plateSize;
+
+    private EnumPlateCategory category;
 
     private String createdAt;
 
@@ -86,6 +89,14 @@ public class ProductListDto {
 
     public void setPlateSize(EnumPlateSize plateSize) {
         this.plateSize = plateSize;
+    }
+    
+    public EnumPlateCategory getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(EnumPlateCategory category) {
+        this.category = category;
     }
 
     public String getCreatedAt() {

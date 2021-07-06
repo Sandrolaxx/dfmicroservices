@@ -16,11 +16,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.github.sandrolaxx.dfmicroservices.dto.FrostExceptionResponseDto;
 import com.github.sandrolaxx.dfmicroservices.dto.ProductCreateDto;
 import com.github.sandrolaxx.dfmicroservices.dto.ProductListDto;
 import com.github.sandrolaxx.dfmicroservices.entities.Product;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.services.ProductService;
-import com.github.sandrolaxx.dfmicroservices.utils.ErrorResponse;
 
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.SimplyTimed;
@@ -54,7 +55,7 @@ public class ProductController {
 
     @GET
     @APIResponse(responseCode = "200", description = "Caso sucesso, retorna a lista de produtos")
-    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
+    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
     @Counted(name = "Quantidade chamadas produto")
     @SimplyTimed(name = "Tempo simples/médio de busca")
     @Timed(name = "Tempo completo da busca")
@@ -64,10 +65,11 @@ public class ProductController {
 
     @POST
     @APIResponse(responseCode = "201", description = "Caso seja cadastrado com sucesso.")
-    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
+    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
     public Response addProduct(ProductCreateDto dto) {
         
         Product newProduct = productService.persistProduct(dto);
+        newProduct.setMessageType(EnumMessageType.CREATE);
 
         emitter.send(newProduct);
 
@@ -77,16 +79,29 @@ public class ProductController {
 
     @PUT
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
-    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
+    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
     public void updateProduct(@HeaderParam("id") Integer id, ProductCreateDto dto) {
-        productService.updateProduct(id, dto);
+
+        Product updatedProduct = productService.updateProduct(id, dto);
+        updatedProduct.setMessageType(EnumMessageType.UPDATE);
+
+        emitter.send(updatedProduct);
+
     }
 
     @DELETE
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
-    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = ErrorResponse.class)))
+    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
     public void deleteProduct(@HeaderParam("id") Integer id) {
+        
         productService.deleteProduct(id);
+
+        Product deleteProduct = new Product();
+        deleteProduct.setId(id);
+        deleteProduct.setMessageType(EnumMessageType.DELETE);
+
+        emitter.send(deleteProduct);
+
     }
     
 }

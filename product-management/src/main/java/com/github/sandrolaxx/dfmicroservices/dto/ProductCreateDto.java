@@ -3,6 +3,7 @@ package com.github.sandrolaxx.dfmicroservices.dto;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 public class ProductCreateDto {
@@ -21,6 +22,8 @@ public class ProductCreateDto {
     private String imageUri;
 
     private EnumPlateSize plateSize;
+
+    private EnumPlateCategory category;
 
     private Boolean active;
 
@@ -78,6 +81,14 @@ public class ProductCreateDto {
 
     public void setPlateSize(EnumPlateSize plateSize) {
         this.plateSize = plateSize;
+    }
+
+    public EnumPlateCategory getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(EnumPlateCategory category) {
+        this.category = category;
     }
 
 }

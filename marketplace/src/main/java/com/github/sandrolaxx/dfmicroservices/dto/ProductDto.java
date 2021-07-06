@@ -1,31 +1,39 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
 import com.github.sandrolaxx.dfmicroservices.entities.Product;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 public class ProductDto {
 
-    public String name;
+    private String name;
 
-    public Double price;
+    private Double price;
 
-    public Double discount;
+    private Double discount;
 
-    public String description;
+    private String description;
 
-    public String imageUri;
+    private String imageUri;
 
-    public Boolean active;
+    private Boolean active;
+
+    private EnumPlateSize plateSize;
+
+    private EnumPlateCategory category;
 
     public ProductDto() {
     }
 
     public ProductDto(Product entity) {
-        name = entity.getName();
-        price = entity.getPrice();
-        discount = entity.getDiscount();
-        description = entity.getDescription();
-        imageUri = entity.getImageUri();
-        active = entity.getActive();
+        this.name = entity.getName();
+        this.price = entity.getPrice();
+        this.discount = entity.getDiscount();
+        this.description = entity.getDescription();
+        this.imageUri = entity.getImageUri();
+        this.active = entity.getActive();
+        this.plateSize = entity.getPlateSize();
+        this.category = entity.getCategory();
     }
 
     public String getName() {
@@ -74,6 +82,22 @@ public class ProductDto {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public EnumPlateSize getPlateSize() {
+        return this.plateSize;
+    }
+
+    public void setPlateSize(EnumPlateSize plateSize) {
+        this.plateSize = plateSize;
+    }
+
+    public EnumPlateCategory getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(EnumPlateCategory category) {
+        this.category = category;
     }
 
 }

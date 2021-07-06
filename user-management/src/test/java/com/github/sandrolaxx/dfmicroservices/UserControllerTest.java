@@ -1,20 +1,5 @@
 package com.github.sandrolaxx.dfmicroservices;
 
-import io.quarkus.test.common.QuarkusTestResource;
-import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.http.Header;
-import io.restassured.specification.RequestSpecification;
-
-import org.approvaltests.Approvals;
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.core.Response.Status;
 
 import com.github.database.rider.cdi.api.DBRider;
@@ -25,6 +10,18 @@ import com.github.sandrolaxx.dfmicroservices.dto.CreateAddressDto;
 import com.github.sandrolaxx.dfmicroservices.dto.CreateUserDto;
 import com.github.sandrolaxx.dfmicroservices.entities.User;
 import com.github.sandrolaxx.dfmicroservices.util.TokenUtils;
+
+import org.approvaltests.Approvals;
+import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.http.Header;
+import io.restassured.specification.RequestSpecification;
 
 @DBRider
 @DBUnit(caseInsensitiveStrategy = Orthography.LOWERCASE)
@@ -75,7 +72,6 @@ public class UserControllerTest {
     @DataSet(value = "user-cenario1.json")
     public void testCreateUser() {
         CreateUserDto dto = new CreateUserDto();
-        List<CreateAddressDto> addressList = new ArrayList<>();
         CreateAddressDto addressDto = new CreateAddressDto();
 
         addressDto.setState("PR");
@@ -88,9 +84,7 @@ public class UserControllerTest {
         addressDto.setLatitude(4343443D);
         addressDto.setLongitude(434343D);
 
-        addressList.add(addressDto);
-
-        dto.setAddress(addressList);
+        dto.setAddress(addressDto);
         dto.setName("Roberto");
         dto.setDocument("10564574902");
         dto.setEmail("teste@hotmail.com");

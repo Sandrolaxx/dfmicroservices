@@ -1,7 +1,6 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,12 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.github.sandrolaxx.dfmicroservices.utils.EncryptUtil;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.jboss.aerogear.security.otp.api.Base32;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
@@ -53,10 +56,13 @@ public class Address extends PanacheEntityBase {
     private boolean main;
 
     @Column(name = "LATITUDE")
-    private Double latitude;
+    private String latitude;
 
     @Column(name = "LONGITUDE")
-    private Double longitude;
+    private String longitude;
+
+    @Column(name = "SECRET")
+    private String secret;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -68,8 +74,17 @@ public class Address extends PanacheEntityBase {
     @Column(name = "UPDATED_AT")
     private Date updatedAt;
 
-    public static List<Address> findByUser(User user) {
-        return find("user", user).list();
+    @PrePersist
+    private void encryptSensitiveData() {
+        this.district = EncryptUtil.textEncrypt(this.district, secret.substring(0, 16));
+        this.street = EncryptUtil.textEncrypt(this.street, secret.substring(0, 16));
+        this.latitude = EncryptUtil.textEncrypt(this.street, secret.substring(0, 16));
+        this.longitude = EncryptUtil.textEncrypt(this.street, secret.substring(0, 16));
+    }
+
+    public Address() {
+        super();
+        this.secret = Base32.random();
     }
 
     public Integer getId() {
@@ -144,20 +159,28 @@ public class Address extends PanacheEntityBase {
         this.main = main;
     }
 
-    public Double getLatitude() {
+    public String getLatitude() {
         return this.latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public String getLongitude() {
         return this.longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getSecret() {
+        return this.secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public Date getCreatedAt() {

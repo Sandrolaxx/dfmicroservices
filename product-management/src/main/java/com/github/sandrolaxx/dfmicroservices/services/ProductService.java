@@ -8,12 +8,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.ws.rs.NotFoundException;
 
 import com.github.sandrolaxx.dfmicroservices.dto.ProductCreateDto;
 import com.github.sandrolaxx.dfmicroservices.dto.ProductListDto;
 import com.github.sandrolaxx.dfmicroservices.entities.Product;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumErrorCode;
 import com.github.sandrolaxx.dfmicroservices.mapper.IProductMapper;
+import com.github.sandrolaxx.dfmicroservices.utils.FrostException;
 
 import org.eclipse.microprofile.opentracing.Traced;
 
@@ -39,19 +40,19 @@ public class ProductService {
         
         Product product = mapper.productCreateDtoToProduct(dto);
 
-        product.persist();
+        product.persistAndFlush();
 
         return product;
 
     }
 
     @Transactional()
-    public void updateProduct(Integer id, @Valid ProductCreateDto dto) {
+    public Product updateProduct(Integer id, @Valid ProductCreateDto dto) {
         
         Optional<Product> existsProduct = Product.findByIdOptional(id);
 
         if (!existsProduct.isPresent()) {
-            throw new NotFoundException();
+            throw new FrostException(EnumErrorCode.PRODUTO_NAO_ENCONTRADO);
         }
 
         var oldProduct = existsProduct.get();
@@ -62,9 +63,13 @@ public class ProductService {
         updatedProduct.setDiscount(dto.getDiscount() == null ? oldProduct.getDiscount() : dto.getDiscount());
         updatedProduct.setDescription(dto.getDescription() == null ? oldProduct.getDescription() : dto.getDescription());
         updatedProduct.setImageUri(dto.getImageUri() == null ? oldProduct.getImageUri() : dto.getDescription());
-        updatedProduct.setActive(dto.getActive() == null ? oldProduct.getActive() : dto.getActive());
+        updatedProduct.setActive(dto.getActive() == oldProduct.getActive() ? oldProduct.getActive() : dto.getActive());
+        updatedProduct.setPlateSize(dto.getPlateSize() == null ? oldProduct.getPlateSize() : dto.getPlateSize());
+        updatedProduct.setCategory(dto.getCategory() == null ? oldProduct.getCategory() : dto.getCategory());
 
-        updatedProduct.persist();
+        updatedProduct.persistAndFlush();
+
+        return updatedProduct;
 
     }
 
@@ -74,7 +79,7 @@ public class ProductService {
         Optional<Product> productToDelete = Product.findByIdOptional(id);
 
         productToDelete.ifPresentOrElse(Product::delete, () -> {
-            throw new NotFoundException();
+            throw new FrostException(EnumErrorCode.PRODUTO_NAO_ENCONTRADO);
         });
 
     }

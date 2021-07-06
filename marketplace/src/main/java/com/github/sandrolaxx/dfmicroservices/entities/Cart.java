@@ -25,29 +25,66 @@ import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 @Entity
 @Table(name = "DF_CART")
 public class Cart extends PanacheEntityBase {
-  
-  @Id
-  @SequenceGenerator(name = "ID_CART", sequenceName = "GEN_CART", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_CART")
-  @Column(name = "ID")
-  private Integer id;
 
-  @OneToOne
-  @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
-  public User user;
+    @Id
+    @SequenceGenerator(name = "ID_CART", sequenceName = "GEN_CART", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_CART")
+    @Column(name = "ID")
+    private Integer id;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cart", orphanRemoval = true)
-  public List<ProductCart> productCart;
+    @OneToOne
+    @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
+    private User user;
 
-  @CreationTimestamp
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "CREATED_AT")
-  public Date createdAt;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cart", orphanRemoval = true)
+    private List<ProductCart> productCart;
 
-  @Column(name = "ACTIVE")
-  public boolean active;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATED_AT")
+    private Date createdAt;
 
-  public Cart(){
-  }
+    @Column(name = "ACTIVE")
+    private boolean active;
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<ProductCart> getProductCart() {
+        return this.productCart;
+    }
+
+    public void setProductCart(List<ProductCart> productCart) {
+        this.productCart = productCart;
+    }
+
+    public Date getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
 }
