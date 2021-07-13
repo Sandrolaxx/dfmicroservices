@@ -53,7 +53,7 @@ public class Address extends PanacheEntityBase {
     private Integer numberAp;
 
     @Column(name = "MAIN")
-    private boolean main;
+    private boolean main = false;
 
     @Column(name = "LATITUDE")
     private String latitude;

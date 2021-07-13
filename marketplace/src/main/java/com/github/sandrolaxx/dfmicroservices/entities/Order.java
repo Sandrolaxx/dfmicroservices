@@ -2,64 +2,31 @@ package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumOrderStatus;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPaymentType;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+public class Order {
 
-@Entity
-@Table(name = "DF_ORDER")
-public class Order extends PanacheEntityBase {
-
-    @Id
-    @SequenceGenerator(name = "ID_ORDER", sequenceName = "GEN_ORDER", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_ORDER")
-    @Column(name = "ID")
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
     private User user;
 
-    @Column(name = "ORDER_STATUS")
-    @Enumerated(EnumType.STRING)
     private EnumOrderStatus orderStatus;
 
-    @Column(name = "DELIVERY_VALUE")
     private Double deliveryValue;
 
-    @Column(name = "PAYMENT_TYPE")
-    @Enumerated(EnumType.STRING)
     private EnumPaymentType paymentType;
     
-    @Column(name = "ADDRESS_DESCRIPTION")
     private String addressDescription;
     
-    @Column(name = "LATITUDE")
     private Double lititude;
     
-    @Column(name = "LONGITUDE")
     private Double longitude;
     
-    @Column(name = "TOTAL")
     private Double total;
 
-    @Column(name = "CREATED_AT")
     public Date createdAt;
 
-    @Column(name = "UPDATED_AT")
     public Date updatedAt;
 
 

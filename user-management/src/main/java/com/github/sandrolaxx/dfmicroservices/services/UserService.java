@@ -85,9 +85,9 @@ public class UserService {
                 : EncryptUtil.textEncrypt(dto.getDocument(), updatedUser.getSecret().substring(0, 16)));
         updatedUser.setPassword(dto.getPassword() == null ? updatedUser.getPassword()
                 : EncryptUtil.textEncrypt(dto.getPassword(), updatedUser.getSecret().substring(0, 16)));
-        updatedUser.setActive(dto.isActive() == updatedUser.isActive() ? updatedUser.isActive() : dto.isActive());
+        updatedUser.setActive(dto.isActive() == null ? updatedUser.isActive() : dto.isActive());
         updatedUser.setAcceptTerms(
-                dto.isAcceptTerms() == updatedUser.isAcceptTerms() ? updatedUser.isAcceptTerms() : dto.isAcceptTerms());
+                dto.isAcceptTerms() == null ? updatedUser.isAcceptTerms() : dto.isAcceptTerms());
 
         updatedUser.persistAndFlush();
 
@@ -95,7 +95,7 @@ public class UserService {
     }
 
     @Transactional()
-    public void deleteUser(Integer idUser) {
+    public User deleteUser(Integer idUser) {
 
         Optional<User> userToDelete = User.findByIdOptional(idUser);
 
@@ -103,6 +103,8 @@ public class UserService {
             throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
         });
 
+        return this.defaultUserToPropagate(idUser);
+        
     }
 
     @Transactional()
@@ -230,6 +232,25 @@ public class UserService {
         if (response.getStatus() != 201) {
             throw new FrostException(EnumErrorCode.ERRO_AO_CADASTRAR_USUARIO);
         }
+
+    }
+
+    private User defaultUserToPropagate(Integer id) {
+        
+        var user = new User();
+
+        user.setId(id);
+        user.setAddress(null);
+        user.setDocument("");
+        user.setEmail("");
+        user.setName("");
+        user.setPassword("");
+        user.setPhone("");
+        user.setSecret("");
+        user.setAcceptTerms(false);
+        user.setActive(false);
+
+        return user;
 
     }
 

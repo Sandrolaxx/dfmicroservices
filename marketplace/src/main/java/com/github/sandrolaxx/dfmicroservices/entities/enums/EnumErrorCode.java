@@ -1,11 +1,9 @@
 package com.github.sandrolaxx.dfmicroservices.entities.enums;
 
-import org.apache.http.HttpStatus;
-
 public enum EnumErrorCode {
     
-    PRODUTO_NAO_ENCONTRADO("01", "Id do produto informado não existe na base de dados!", HttpStatus.SC_NOT_FOUND),
-    ERRO_AO_CADASTRAR_PRODUTO("02", "Ocorreu um erro interno e não foi possível cadastrar o produto!", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    PRODUTO_NAO_ENCONTRADO("01", "Id do produto informado não existe na base de dados!", 404),
+    ERRO_AO_CADASTRAR_PRODUTO("02", "Ocorreu um erro interno e não foi possível cadastrar o produto!", 502);
 
     private String key;
 

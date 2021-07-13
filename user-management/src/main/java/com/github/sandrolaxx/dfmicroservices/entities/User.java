@@ -51,10 +51,10 @@ public class User extends PanacheEntityBase {
     private String phone;
 
     @Column(name = "ACTIVE")
-    private boolean active;
+    private Boolean active;
 
     @Column(name = "ACCEPT_TERMS")
-    private boolean acceptTerms;
+    private Boolean acceptTerms;
 
     @Column(name = "SECRET")
     private String secret;
@@ -146,19 +146,19 @@ public class User extends PanacheEntityBase {
         this.secret = secret;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return this.active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
-    public boolean isAcceptTerms() {
+    public Boolean isAcceptTerms() {
         return this.acceptTerms;
     }
 
-    public void setAcceptTerms(boolean acceptTerms) {
+    public void setAcceptTerms(Boolean acceptTerms) {
         this.acceptTerms = acceptTerms;
     }
 

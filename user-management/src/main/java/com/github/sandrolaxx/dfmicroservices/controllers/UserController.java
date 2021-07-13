@@ -100,10 +100,8 @@ public class UserController {
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
     public void deleteUser(@HeaderParam("idUser") Integer idUser) {
         
-        userService.deleteUser(idUser);
+        var deletedUser = userService.deleteUser(idUser);
 
-        User deletedUser = new User();
-        deletedUser.setId(idUser);
         deletedUser.setMessageType(EnumMessageType.DELETE);
 
         emitter.send(deletedUser);

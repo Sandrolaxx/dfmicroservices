@@ -2,61 +2,35 @@ package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.sql.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import com.github.sandrolaxx.dfmicroservices.dto.ProductDto;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+public class Product {
 
-@Entity
-@Table(name = "DF_PRODUCT")
-public class Product extends PanacheEntityBase {
-
-    @Id
     private Integer id;
 
-    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "PRICE")
     private Double price;
 
-    @Column(name = "DISCOUNT")
     private Double discount;
 
-    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "IMAGE_URI")
     private String imageUri;
 
-    @Column(name = "ACTIVE")
     private Boolean active;
 
-    @Column(name = "PLATE_SIZE")
-    @Enumerated(EnumType.STRING)
     private EnumPlateSize plateSize;
 
-    @Column(name = "CATEGORY")
-    @Enumerated(EnumType.STRING)
     private EnumPlateCategory category;
 
-    @Column(name = "CREATED_AT")
     private Date createdAt;
 
-    @Column(name = "UPDATED_AT")
     private Date updatedAt;
 
-    @Transient
     private EnumMessageType messageType;
 
     public Product() {
