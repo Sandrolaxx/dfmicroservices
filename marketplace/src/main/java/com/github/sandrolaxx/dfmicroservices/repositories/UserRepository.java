@@ -87,7 +87,7 @@ public class UserRepository {
                                             row.getString("password") : user.getPassword())
                                         .addString(user.getPhone().isEmpty() ? 
                                             row.getString("phone") : user.getPhone())
-                                        .addBoolean(user.isAcceptTerms() == (row.getBoolean("accept_terms")) ?
+                                        .addBoolean(user.isAcceptTerms() == row.getBoolean("accept_terms") ?
                                             row.getBoolean("accept_terms") : user.isAcceptTerms())
                                         .addBoolean(user.isActive() == row.getBoolean("active") ? 
                                             row.getBoolean("active") : user.isActive())
@@ -104,17 +104,17 @@ public class UserRepository {
 
     }
 
-    public void delete(Integer id) {
+    public void delete(User user) {
 
         client.preparedQuery("DELETE FROM DF_USER_ADDRESS" + 
                              " WHERE " + 
                              "ID_USER = $1")
-              .execute(Tuple.of(id))
+              .execute(Tuple.of(user.getId()))
               .onComplete(tr -> {
                 client.preparedQuery("DELETE FROM DF_USER" + 
                                      " WHERE " +
                                      "ID = $1")
-                      .execute(Tuple.of(id));
+                      .execute(Tuple.of(user.getId()));
                });
 
     }

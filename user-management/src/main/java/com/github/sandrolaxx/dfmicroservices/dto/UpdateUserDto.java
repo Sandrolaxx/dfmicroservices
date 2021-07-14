@@ -12,9 +12,9 @@ public class UpdateUserDto {
 
     private String phone;
 
-    private Boolean active;
+    private boolean active;
 
-    private Boolean acceptTerms;
+    private boolean acceptTerms;
 
     public String getName() {
         return this.name;
@@ -56,19 +56,19 @@ public class UpdateUserDto {
         this.phone = phone;
     }
 
-    public Boolean isActive() {
+    public boolean isActive() {
         return this.active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public Boolean isAcceptTerms() {
+    public boolean isAcceptTerms() {
         return this.acceptTerms;
     }
 
-    public void setAcceptTerms(Boolean acceptTerms) {
+    public void setAcceptTerms(boolean acceptTerms) {
         this.acceptTerms = acceptTerms;
     }
 

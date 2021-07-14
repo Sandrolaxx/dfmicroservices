@@ -1,6 +1,8 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +32,7 @@ public class Address extends PanacheEntityBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
     private User user;
 
@@ -53,7 +55,7 @@ public class Address extends PanacheEntityBase {
     private Integer numberAp;
 
     @Column(name = "MAIN")
-    private boolean main = false;
+    private Boolean main;
 
     @Column(name = "LATITUDE")
     private String latitude;
@@ -85,6 +87,14 @@ public class Address extends PanacheEntityBase {
     public Address() {
         super();
         this.secret = Base32.random();
+    }
+
+    public static Address findByUserIdAddress(User user, Integer idAddress) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("user", user);
+        params.put("id", idAddress);
+
+        return find("user = :user and id = :id", params).firstResult();
     }
 
     public Integer getId() {
@@ -151,11 +161,11 @@ public class Address extends PanacheEntityBase {
         this.numberAp = numberAp;
     }
 
-    public boolean isMain() {
+    public Boolean isMain() {
         return this.main;
     }
 
-    public void setMain(boolean main) {
+    public void setMain(Boolean main) {
         this.main = main;
     }
 

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sandrolaxx.dfmicroservices.entities.User;
+import com.github.sandrolaxx.dfmicroservices.repositories.AddressRepository;
 import com.github.sandrolaxx.dfmicroservices.repositories.UserRepository;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -22,6 +23,9 @@ public class UserRegister {
 
     @Inject
     UserRepository repository;
+
+    @Inject
+    AddressRepository addressRepository;
 
     @Incoming("user")
     public void receivedNewUser(JsonObject userPropagated) throws JsonMappingException, JsonProcessingException, InterruptedException {
@@ -45,28 +49,21 @@ public class UserRegister {
                 repository.update(user);
                 break;
             case DELETE:
-                repository.delete(user.getId());    
+                repository.delete(user);    
                 break;
+            case CREATE_ADDRESS:
+                addressRepository.persist(user);
+                break;            
             case UPDATE_ADDRESS:
-                this.updateAddress(user);
+                addressRepository.update(user);
+                break;            
+            case DELETE_ADDRESS:
+                addressRepository.delete(user);
                 break;            
             default:
                 break;
             }
             
         }
-
-        private void updateAddress(User user) {
-            
-            var updateAddress = user.getAddress().get(0);
-
-            System.out.println(updateAddress.getCity());
-
-            /**@TODO
-             * Implement
-             */
-
-        }
-
 
 }

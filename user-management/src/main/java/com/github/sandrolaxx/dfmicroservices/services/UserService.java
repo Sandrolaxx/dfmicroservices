@@ -45,7 +45,9 @@ public class UserService {
 
         List<User> userList = User.listAll();
 
-        return userList.stream().map(p -> userMapper.toListUserDto(p)).collect(Collectors.toList());
+        return userList.stream()
+                       .map(p -> userMapper.toListUserDto(p))
+                       .collect(Collectors.toList());
 
     }
 
@@ -54,10 +56,6 @@ public class UserService {
 
         User newUser = userMapper.createUserDtoToUser(dto);
 
-        List<Address> addressList = new ArrayList<>();
-        addressList.add(userMapper.addressDtoToEntity(dto.getAddress()));
-        
-        newUser.setAddress(addressList);
         // this.saveUserKeycloak(newUser);
 
         newUser.persistAndFlush();
@@ -85,13 +83,13 @@ public class UserService {
                 : EncryptUtil.textEncrypt(dto.getDocument(), updatedUser.getSecret().substring(0, 16)));
         updatedUser.setPassword(dto.getPassword() == null ? updatedUser.getPassword()
                 : EncryptUtil.textEncrypt(dto.getPassword(), updatedUser.getSecret().substring(0, 16)));
-        updatedUser.setActive(dto.isActive() == null ? updatedUser.isActive() : dto.isActive());
-        updatedUser.setAcceptTerms(
-                dto.isAcceptTerms() == null ? updatedUser.isAcceptTerms() : dto.isAcceptTerms());
-
-        updatedUser.persistAndFlush();
+        updatedUser.setActive(dto.isActive() == updatedUser.isActive()  ? 
+                updatedUser.isActive() : dto.isActive());
+        updatedUser.setAcceptTerms(dto.isAcceptTerms() == updatedUser.isAcceptTerms() ? 
+                updatedUser.isAcceptTerms() : dto.isAcceptTerms());
 
         return updatedUser;
+        
     }
 
     @Transactional()
@@ -103,8 +101,8 @@ public class UserService {
             throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
         });
 
-        return this.defaultUserToPropagate(idUser);
-        
+        return this.defaultUserToPropagate(idUser, null);
+
     }
 
     @Transactional()
@@ -115,25 +113,20 @@ public class UserService {
         if (existsUser == null) {
             throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
         }
-
-        var listUserAddress = existsUser.getAddress();
-
-        if (listUserAddress == null || listUserAddress.isEmpty()) {
-            throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
-        }
-
+        
         var createAddress = userMapper.addressDtoToEntity(dto);
+
         createAddress.setMain(false);
         createAddress.setUser(existsUser);
-
-        createAddress.persistAndFlush();
+        
+        createAddress.persist();
 
         return createAddress;
 
     }
 
     @Transactional()
-    public Address updateAddress(Integer idUser, Integer idAddres, UpdateAddressDto dto) {
+    public Address updateAddress(Integer idUser, Integer idAddress, UpdateAddressDto dto) {
 
         User existsUser = User.findById(idUser);
 
@@ -141,20 +134,11 @@ public class UserService {
             throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
         }
 
-        var listUserAddress = existsUser.getAddress();
-        var isExistsAddress = listUserAddress.stream()
-                                             .anyMatch(a -> a.getId()
-                                                             .equals(idAddres));
+        var updatedAddress = Address.findByUserIdAddress(existsUser, idAddress);
 
-        if (listUserAddress == null || listUserAddress.isEmpty() || !isExistsAddress) {
-            throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
+        if (updatedAddress == null) {
+            throw new FrostException(EnumErrorCode.ENDERECO_NAO_ENCONTRADO);
         }
-
-        var updatedAddress = listUserAddress.stream()
-                                            .filter(a -> a.getId()
-                                                        .equals(idAddres))
-                                            .findFirst()
-                                            .get();
 
         updatedAddress.setState(dto.getState() == null ? updatedAddress.getState() : dto.getState());
         updatedAddress.setCity(dto.getCity() == null ? updatedAddress.getCity() : dto.getCity());
@@ -170,14 +154,12 @@ public class UserService {
         updatedAddress.setStreet(dto.getStreet() == null ? updatedAddress.getStreet()
                 : EncryptUtil.textEncrypt(dto.getStreet(), updatedAddress.getSecret().substring(0, 16)));
 
-        updatedAddress.persistAndFlush();
-
         return updatedAddress;
 
     }   
 
     @Transactional()
-    public void deleteAddress(Integer idUser, Integer idAddres) {
+    public User deleteAddress(Integer idUser, Integer idAddress) {
 
         User existsUser = User.findById(idUser);
 
@@ -185,28 +167,21 @@ public class UserService {
             throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
         }
 
-        var listUserAddress = existsUser.getAddress();
-        var isExistsAddress = listUserAddress.stream()
-                                             .anyMatch(a -> a.getId()
-                                                             .equals(idAddres));
+        var addressToDelete = Address.findByUserIdAddress(existsUser, idAddress);
 
-        if (listUserAddress == null || listUserAddress.isEmpty() || !isExistsAddress) {
-            throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
+        if (addressToDelete == null) {
+            throw new FrostException(EnumErrorCode.ENDERECO_NAO_ENCONTRADO);
         }
         
-        if (listUserAddress.size() <= 1) {
+        if (existsUser.getAddress().size() <= 1) {
             throw new FrostException(EnumErrorCode.ERRO_AO_DELETAR_ENDERECO);
-        }
+        }                                    
 
-        var addressToDelete = listUserAddress.stream()
-                                             .filter(a -> a.getId()
-                                                           .equals(idAddres))
-                                             .findFirst()
-                                             .get();
+        existsUser.getAddress().remove(addressToDelete);
 
-        listUserAddress.remove(addressToDelete);                                     
+        addressToDelete.delete();
 
-        Address.deleteById(idAddres);
+        return this.defaultUserToPropagate(idUser, addressToDelete);
 
     }
 
@@ -235,7 +210,7 @@ public class UserService {
 
     }
 
-    private User defaultUserToPropagate(Integer id) {
+    public User defaultUserToPropagate(Integer id, Address address) {
         
         var user = new User();
 
@@ -249,6 +224,17 @@ public class UserService {
         user.setSecret("");
         user.setAcceptTerms(false);
         user.setActive(false);
+
+        if (address != null) {
+
+            var listToPropagate = new ArrayList<Address>();
+
+            address.setUser(null);
+            listToPropagate.add(address);
+    
+            user.setAddress(listToPropagate);
+
+        }
 
         return user;
 
