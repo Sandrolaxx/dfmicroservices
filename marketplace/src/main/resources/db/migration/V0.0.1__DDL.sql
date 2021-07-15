@@ -29,14 +29,12 @@ CREATE TABLE public.DF_PRODUCT (
     id int4 not null,
     ACTIVE boolean,
     CATEGORY varchar(255),
-    CREATED_AT date,
     DESCRIPTION varchar(255),
     DISCOUNT float8,
     IMAGE_URI varchar(255),
     NAME varchar(255),
     PLATE_SIZE varchar(255),
     PRICE float8,
-    UPDATED_AT date,
     primary key (id)
 );
 

@@ -1,11 +1,11 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
-import java.sql.Date;
-
 import com.github.sandrolaxx.dfmicroservices.dto.ProductDto;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
+
+import io.vertx.sqlclient.Row;
 
 public class Product {
 
@@ -27,10 +27,6 @@ public class Product {
 
     private EnumPlateCategory category;
 
-    private Date createdAt;
-
-    private Date updatedAt;
-
     private EnumMessageType messageType;
 
     public Product() {
@@ -42,8 +38,12 @@ public class Product {
         discount = dto.getDiscount();
         description = dto.getDescription();
         imageUri = dto.getImageUri();
-        active = dto.getActive();
+        active = dto.isActive();
         plateSize = dto.getPlateSize();
+    }
+
+    public Product from(Row row){
+        return null;
     }
 
     public Integer getId() {
@@ -94,8 +94,8 @@ public class Product {
         this.imageUri = imageUri;
     }
 
-    public Boolean getActive() {
-        return this.active;
+    public Boolean isActive() {
+        return active;
     }
 
     public void setActive(Boolean active) {
@@ -116,22 +116,6 @@ public class Product {
 
     public void setCategory(EnumPlateCategory category) {
         this.category = category;
-    }
-
-    public Date getCreatedAt() {
-        return this.createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return this.updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public EnumMessageType getMessageType() {

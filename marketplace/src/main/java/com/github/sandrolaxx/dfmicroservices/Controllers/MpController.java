@@ -10,9 +10,12 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MpController {
 
+    // @Inject
+    // ProductRepository repository;
+
     // @Path("/products")
     // public Multi<ProductDto> findProducts() {
-    //     Multi<Product> productList = Product.streamAll();
+    //     Multi<Product> productList = repository;
 
     //     return productList.map(p -> new ProductDto(p));
     // }

@@ -31,7 +31,7 @@ public class ProductDto {
         this.discount = entity.getDiscount();
         this.description = entity.getDescription();
         this.imageUri = entity.getImageUri();
-        this.active = entity.getActive();
+        this.active = entity.isActive();
         this.plateSize = entity.getPlateSize();
         this.category = entity.getCategory();
     }
@@ -76,7 +76,7 @@ public class ProductDto {
         this.imageUri = imageUri;
     }
 
-    public Boolean getActive() {
+    public Boolean isActive() {
         return this.active;
     }
 

@@ -1,12 +1,13 @@
 package com.github.sandrolaxx.dfmicroservices.Controllers;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sandrolaxx.dfmicroservices.entities.Product;
-import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
+import com.github.sandrolaxx.dfmicroservices.repositories.ProductRepository;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
@@ -15,74 +16,32 @@ import io.vertx.core.json.JsonObject;
 @ApplicationScoped
 public class ProductRegister {
 
+    @Inject
+    ProductRepository repository;
 
     @Incoming("product")
     public void receivedProduct(JsonObject productPropagated) throws JsonMappingException, JsonProcessingException {
 
+        productPropagated.remove("createdAt");
+        productPropagated.remove("updatedAt");
+
         ObjectMapper m = new ObjectMapper();
-        Product productMessage = m.readValue(productPropagated.toString(), Product.class);
+        Product product = m.readValue(productPropagated.toString(), Product.class);
 
-        EnumMessageType messageType = productMessage.getMessageType();
-
-        switch (messageType) {
+        switch (product.getMessageType()) {
             case CREATE:
-                this.persistNewProduct(productMessage);
-                break;
+                repository.persist(product);
+            break;
             case UPDATE:
-                this.updateProduct(productMessage);
-                break;
+                repository.update(product);
+            break;
             case DELETE:
-                this.deleteProduct(productMessage);
+                repository.delete(product);
                 break;
             default:
                 break;
         }
-
         
     }
-    
-    private void persistNewProduct(Product product) {
 
-        // mutinySession.persist(product)
-        //              .chain(mutinySession::flush)
-        //              .await()
-        //              .indefinitely();
-
-    }
-
-    private void updateProduct(Product product) {
-
-        // Product existProduct = mutinySession.find(Product.class, product.getId())
-        //                                     .await()
-        //                                     .indefinitely();
-
-        // existProduct.setName(product.getName() == null ? existProduct.getName() : product.getName());
-        // existProduct.setPrice(product.getPrice() == null ? existProduct.getPrice() : product.getPrice());
-        // existProduct.setDiscount(product.getDiscount() == null ? existProduct.getDiscount() : product.getDiscount());
-        // existProduct.setDescription(product.getDescription() == null ? existProduct.getDescription() : product.getDescription());
-        // existProduct.setImageUri(product.getImageUri() == null ? existProduct.getImageUri() : product.getDescription());
-        // existProduct.setActive(product.getActive() == existProduct.getActive() ? existProduct.getActive() : product.getActive());
-        // existProduct.setPlateSize(product.getPlateSize() == null ? existProduct.getPlateSize() : product.getPlateSize());
-        // existProduct.setCategory(product.getCategory() == null ? existProduct.getCategory() : product.getCategory());                                  
-
-        // mutinySession.merge(existProduct)
-        //              .chain(mutinySession::flush)
-        //              .await()
-        //              .indefinitely();
-
-    }
-
-    private void deleteProduct(Product product) {
-
-        // Product deleteProduct = mutinySession.find(Product.class, product.getId())
-        //                                      .await()
-        //                                      .indefinitely();
-
-        // mutinySession.remove(deleteProduct)
-        //              .chain(mutinySession::flush)
-        //              .await()
-        //              .indefinitely();
-
-    }
-    
 }
