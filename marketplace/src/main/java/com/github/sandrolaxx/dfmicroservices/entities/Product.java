@@ -126,4 +126,13 @@ public class Product {
         this.messageType = messageType;
     }
 
+    @Override
+    public String toString() {
+        return "Product [category=" + category + ", description=" + description + ", discount=" + discount + ", id="
+                + id + ", imageUri=" + imageUri + ", messageType=" + messageType + ", name=" + name + ", plateSize="
+                + plateSize + ", price=" + price + "]";
+    }
+
+    
+
 }

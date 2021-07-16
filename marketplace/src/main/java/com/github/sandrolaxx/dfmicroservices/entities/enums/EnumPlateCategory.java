@@ -36,5 +36,17 @@ public enum EnumPlateCategory {
         
         return false;
     }
+
+    public static EnumPlateCategory fromString(String srtEnum) {
+
+        for (EnumPlateCategory enumValue : EnumPlateCategory.values()) {
+            if (enumValue.getKey().equalsIgnoreCase(srtEnum)) {
+                return enumValue;
+            }
+        }
+
+        return null;
+
+    }
     
 }

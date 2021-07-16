@@ -31,5 +31,17 @@ public enum EnumPlateSize {
         
         return false;
     }
+
+    public static EnumPlateSize fromString(String srtEnum) {
+
+        for (EnumPlateSize enumValue : EnumPlateSize.values()) {
+            if (enumValue.getKey().equalsIgnoreCase(srtEnum)) {
+                return enumValue;
+            }
+        }
+
+        return null;
+
+    }
     
 }
