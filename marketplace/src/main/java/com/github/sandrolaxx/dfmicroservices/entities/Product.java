@@ -5,7 +5,8 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
-import io.vertx.sqlclient.Row;
+import io.vertx.mutiny.sqlclient.Row;
+
 
 public class Product {
 
@@ -42,8 +43,21 @@ public class Product {
         plateSize = dto.getPlateSize();
     }
 
-    public Product from(Row row){
-        return null;
+    public static Product from(Row row) {
+        
+        var product = new Product();
+
+        product.setName(row.getString("name"));
+        product.setDescription(row.getString("description"));
+        product.setImageUri(row.getString("image_uri"));
+        product.setCategory(EnumPlateCategory.fromString(row.getString("category")));
+        product.setPlateSize(EnumPlateSize.fromString(row.getString("plate_size")));
+        product.setPrice(row.getDouble("price"));
+        product.setDiscount(row.getDouble("discount"));
+        product.setActive(row.getBoolean("active"));
+
+        return product;
+
     }
 
     public Integer getId() {

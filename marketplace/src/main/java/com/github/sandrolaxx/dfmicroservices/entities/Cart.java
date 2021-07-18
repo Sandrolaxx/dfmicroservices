@@ -3,18 +3,32 @@ package com.github.sandrolaxx.dfmicroservices.entities;
 import java.util.Date;
 import java.util.List;
 
+import io.vertx.mutiny.sqlclient.Row;
+
 
 public class Cart {
 
     private Integer id;
 
-    private User user;
+    private Integer idUser;
 
-    private List<ProductCart> productCart;
+    private List<Integer> idProductCart;
 
     private Date createdAt;
 
     private boolean active;
+
+    public static Cart from(Row row) {
+        
+        var cart = new Cart();
+
+        cart.setId(row.getInteger("id"));
+        cart.setIdUser(row.getInteger("id_user"));
+        cart.setActive(row.getBoolean("active"));
+
+        return cart;
+
+    }
 
     public Integer getId() {
         return this.id;
@@ -23,21 +37,21 @@ public class Cart {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public User getUser() {
-        return this.user;
+    
+    public Integer getIdUser() {
+        return idUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
     }
 
-    public List<ProductCart> getProductCart() {
-        return this.productCart;
+    public List<Integer> getIdProductCart() {
+        return idProductCart;
     }
 
-    public void setProductCart(List<ProductCart> productCart) {
-        this.productCart = productCart;
+    public void setIdProductCart(List<Integer> idProductCart) {
+        this.idProductCart = idProductCart;
     }
 
     public Date getCreatedAt() {

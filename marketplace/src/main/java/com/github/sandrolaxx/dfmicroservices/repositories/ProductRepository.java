@@ -1,14 +1,9 @@
 package com.github.sandrolaxx.dfmicroservices.repositories;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.github.sandrolaxx.dfmicroservices.entities.Product;
-import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
-import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 import io.vertx.core.Future;
 import io.vertx.pgclient.PgPool;
@@ -45,11 +40,9 @@ public class ProductRepository {
 
     public void update(Product product) {
 
-        this.findById(product.getId()).onComplete(tr -> {
+        this.findById(product.getId()).onSuccess(rowSet -> {
 
-            if (tr.succeeded()) {
-
-                for (Row row : tr.result()) {
+                for (Row row : rowSet) {
 
                     client.preparedQuery("UPDATE DF_PRODUCT SET "                        + 
                                          "NAME = $1, DESCRIPTION = $2, IMAGE_URI = $3, " +
@@ -79,10 +72,6 @@ public class ProductRepository {
         
                 }
 
-            } else {
-                System.out.println("Failure: " + tr.cause().getMessage());
-            }               
-
         });
 
     }
@@ -102,42 +91,6 @@ public class ProductRepository {
                                     " WHERE " +
                                     "ID = $1")
                      .execute(Tuple.of(idProduct));
-
-    }
-
-    public List<Product> list() {
-
-        List<Product> productList = new ArrayList<>();
-
-        client.preparedQuery("SELECT * FROM DF_PRODUCT" + 
-                                    " WHERE " +
-                                    "ACTIVE IS TRUE")
-              .execute().onSuccess(rowSet -> {
-                
-                    for (Row row : rowSet) {
-                        productList.add(this.from(row));
-                    }
-
-              }).toCompletionStage();
-
-            return productList;
-
-    }
-
-    public Product from(Row row) {
-        
-        var product = new Product();
-
-        product.setName(row.getString("name"));
-        product.setDescription(row.getString("description"));
-        product.setImageUri(row.getString("image_uri"));
-        product.setCategory(EnumPlateCategory.fromString(row.getString("category")));
-        product.setPlateSize(EnumPlateSize.fromString(row.getString("plate_size")));
-        product.setPrice(row.getDouble("price"));
-        product.setDiscount(row.getDouble("discount"));
-        product.setActive(row.getBoolean("active"));
-
-        return product;
 
     }
 

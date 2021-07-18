@@ -35,7 +35,7 @@ public class UserRepository {
                             .addString(user.getSecret())
                             .addBoolean(user.isAcceptTerms())
                             .addBoolean(user.isActive())
-               ).onComplete(tr -> {
+              ).onSuccess(tr -> {
 
                     Address adrress = user.getAddress().get(0);
                     
@@ -59,17 +59,25 @@ public class UserRepository {
                                         .addBoolean(adrress.isActive())
                                         .addBoolean(adrress.isMain())
                           );    
-                });
+              }).onSuccess(tr -> {
+                    
+                    client.preparedQuery("INSERT INTO DF_CART "+
+                                        "(ID_USER, ACTIVE)" +
+                                        " VALUES " +
+                                        "($1, $2)") 
+                          .execute(Tuple.tuple()
+                                        .addInteger(user.getId())
+                                        .addBoolean(Boolean.TRUE)
+                          );
+              });
 
     }
 
     public void update(User user) {
 
-        this.findById(user.getId()).onComplete(tr -> {
+        this.findById(user.getId()).onSuccess(rowSet -> {
             
-            if (tr.succeeded()) {
-                
-                for (Row row : tr.result()) {
+                for (Row row : rowSet) {
         
                     client.preparedQuery("UPDATE DF_USER SET " + 
                                          "DOCUMENT = $1, EMAIL = $2, NAME = $3, PASSWORD = $4, " +
@@ -96,10 +104,6 @@ public class UserRepository {
         
                 }
                 
-            } else {
-                System.out.println("Failure: " + tr.cause().getMessage());
-            }
-
         });
 
     }
@@ -110,12 +114,18 @@ public class UserRepository {
                              " WHERE " + 
                              "ID_USER = $1")
               .execute(Tuple.of(user.getId()))
-              .onComplete(tr -> {
-                client.preparedQuery("DELETE FROM DF_USER" + 
+              .onSuccess(tr -> {
+                client.preparedQuery("DELETE FROM DF_CART" + 
                                      " WHERE " +
-                                     "ID = $1")
+                                     "ID_USER = $1")
                       .execute(Tuple.of(user.getId()));
-               });
+               })
+              .onSuccess(tr -> {
+                client.preparedQuery("DELETE FROM DF_USER" + 
+                                    " WHERE " +
+                                    "ID = $1")
+                    .execute(Tuple.of(user.getId()));
+            }); 
 
     }
 

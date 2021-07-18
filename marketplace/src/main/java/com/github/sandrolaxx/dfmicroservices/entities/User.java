@@ -4,7 +4,8 @@ import java.util.List;
 
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 
-import io.vertx.sqlclient.Row;
+import io.vertx.mutiny.sqlclient.Row;
+
 
 public class User {
 
@@ -44,7 +45,6 @@ public class User {
         this.document = document;
         this.phone = phone;
         this.acceptTerms = acceptTerms;
-        this.active = active;
     }
 
     public Integer getId() {
