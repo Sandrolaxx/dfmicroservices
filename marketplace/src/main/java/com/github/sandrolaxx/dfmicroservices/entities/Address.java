@@ -1,32 +1,67 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
-public class Address {
+import java.util.Date;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+
+@Entity
+@Cacheable
+@Table(name = "DF_USER_ADDRESS")
+public class Address extends PanacheEntityBase {
+
+    @Id
     private Integer id;
 
-    private Integer user;
-    
+    @ManyToOne
+    @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
+    private User user;
+
+    @Column(name = "STATE")
     private String state;
 
+    @Column(name = "CITY")
     private String city;
 
+    @Column(name = "DISTRICT")
     private String district;
 
+    @Column(name = "STREET")
     private String street;
 
+    @Column(name = "NUMBER")
     private Integer number;
 
+    @Column(name = "NUMBER_AP")
     private Integer numberAp;
 
+    @Column(name = "ACTIVE")
     private boolean active;
 
+    @Column(name = "MAIN")
     private boolean main;
 
+    @Column(name = "LATITUDE")
     private String latitude;
 
+    @Column(name = "LONGITUDE")
     private String longitude;
 
+    @Column(name = "SECRET")
     private String secret;
+
+    @Column(name = "CREATED_AT")
+    private Date createdAt;
+
+    @Column(name = "UPDATED_AT")
+    private Date updatedAt;
 
     public Integer getId() {
         return this.id;
@@ -36,11 +71,11 @@ public class Address {
         this.id = id;
     }
 
-    public Integer getUser() {
+    public User getUser() {
         return this.user;
     }
 
-    public void setUser(Integer user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -130,6 +165,22 @@ public class Address {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public Date getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
     
 }

@@ -1,33 +1,65 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
+import java.sql.Date;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import com.github.sandrolaxx.dfmicroservices.dto.ProductDto;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import io.vertx.mutiny.sqlclient.Row;
 
+@Entity
+@Cacheable
+@Table(name = "DF_PRODUCT")
+public class Product extends PanacheEntityBase {
 
-public class Product {
-
+    @Id
     private Integer id;
 
+    @Column(name = "NAME")
     private String name;
 
+    @Column(name = "PRICE")
     private Double price;
 
+    @Column(name = "DISCOUNT")
     private Double discount;
 
+    @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "IMAGE_URI")
     private String imageUri;
 
+    @Column(name = "ACTIVE")
     private Boolean active;
 
+    @Column(name = "PLATE_SIZE")
+    @Enumerated(EnumType.STRING)
     private EnumPlateSize plateSize;
 
+    @Column(name = "CATEGORY")
+    @Enumerated(EnumType.STRING)
     private EnumPlateCategory category;
 
+    @Column(name = "CREATED_AT")
+    private Date createdAt;
+
+    @Column(name = "UPDATED_AT")
+    private Date updatedAt;
+
+    @Transient
     private EnumMessageType messageType;
 
     public Product() {
@@ -41,23 +73,6 @@ public class Product {
         imageUri = dto.getImageUri();
         active = dto.isActive();
         plateSize = dto.getPlateSize();
-    }
-
-    public static Product from(Row row) {
-        
-        var product = new Product();
-
-        product.setName(row.getString("name"));
-        product.setDescription(row.getString("description"));
-        product.setImageUri(row.getString("image_uri"));
-        product.setCategory(EnumPlateCategory.fromString(row.getString("category")));
-        product.setPlateSize(EnumPlateSize.fromString(row.getString("plate_size")));
-        product.setPrice(row.getDouble("price"));
-        product.setDiscount(row.getDouble("discount"));
-        product.setActive(row.getBoolean("active"));
-
-        return product;
-
     }
 
     public Integer getId() {
@@ -109,7 +124,7 @@ public class Product {
     }
 
     public Boolean isActive() {
-        return active;
+        return this.active;
     }
 
     public void setActive(Boolean active) {
@@ -132,6 +147,22 @@ public class Product {
         this.category = category;
     }
 
+    public Date getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public EnumMessageType getMessageType() {
         return this.messageType;
     }
@@ -140,13 +171,28 @@ public class Product {
         this.messageType = messageType;
     }
 
+    public static Product from(Row row) {
+        
+        var product = new Product();
+
+        product.setName(row.getString("name"));
+        product.setDescription(row.getString("description"));
+        product.setImageUri(row.getString("image_uri"));
+        product.setCategory(EnumPlateCategory.fromString(row.getString("category")));
+        product.setPlateSize(EnumPlateSize.fromString(row.getString("plate_size")));
+        product.setPrice(row.getDouble("price"));
+        product.setDiscount(row.getDouble("discount"));
+        product.setActive(row.getBoolean("active"));
+
+        return product;
+
+    }
+
     @Override
     public String toString() {
         return "Product [category=" + category + ", description=" + description + ", discount=" + discount + ", id="
                 + id + ", imageUri=" + imageUri + ", messageType=" + messageType + ", name=" + name + ", plateSize="
                 + plateSize + ", price=" + price + "]";
     }
-
-    
 
 }
