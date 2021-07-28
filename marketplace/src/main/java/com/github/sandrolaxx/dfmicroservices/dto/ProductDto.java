@@ -6,6 +6,8 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
 public class ProductDto {
 
+    private Integer id;
+
     private String name;
 
     private Double price;
@@ -26,6 +28,7 @@ public class ProductDto {
     }
 
     public ProductDto(Product entity) {
+        this.id = entity.getId();
         this.name = entity.getName();
         this.price = entity.getPrice();
         this.discount = entity.getDiscount();
@@ -34,6 +37,15 @@ public class ProductDto {
         this.active = entity.isActive();
         this.plateSize = entity.getPlateSize();
         this.category = entity.getCategory();
+    }
+    
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -6,28 +6,35 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "preLaunchTask": "quarkus:dev (product-management)",
-      "type": "java",
-      "request": "attach",
-      "hostName": "localhost",
-      "name": "Debug Quarkus application (product-management)",
-      "port": 5005
+        "type": "java",
+        "name": "Launch test",
+        "request": "launch",
+        "mainClass": "com.github.sandrolaxx.dfmicroservices.Controllers.test",
+        "projectName": "marketplace"
     },
     {
-      "preLaunchTask": "quarkus:dev (marketplace)",
-      "type": "java",
-      "request": "attach",
-      "hostName": "localhost",
-      "name": "Debug Quarkus application (marketplace)",
-      "port": 5006
+        "preLaunchTask": "quarkus:dev (product-management)",
+        "type": "java",
+        "request": "attach",
+        "hostName": "localhost",
+        "name": "Debug Quarkus application (product-management)",
+        "port": 5005
     },
     {
-      "preLaunchTask": "quarkus:dev (user-management)",
-      "type": "java",
-      "request": "attach",
-      "hostName": "localhost",
-      "name": "Debug Quarkus application (user-management)",
-      "port": 5005
+        "preLaunchTask": "quarkus:dev (marketplace)",
+        "type": "java",
+        "request": "attach",
+        "hostName": "localhost",
+        "name": "Debug Quarkus application (marketplace)",
+        "port": 5006
+    },
+    {
+        "preLaunchTask": "quarkus:dev (user-management)",
+        "type": "java",
+        "request": "attach",
+        "hostName": "localhost",
+        "name": "Debug Quarkus application (user-management)",
+        "port": 5005
     }
-  ]
+]
 }
