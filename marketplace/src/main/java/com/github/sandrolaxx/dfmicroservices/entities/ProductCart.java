@@ -1,6 +1,7 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,13 +16,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.smallrye.mutiny.Uni;
 
 @Entity
 @Table(name = "DF_PRODUCT_CART")
+@JsonIgnoreProperties({"cart"})
 public class ProductCart extends PanacheEntityBase {
 
     @Id
@@ -35,7 +40,7 @@ public class ProductCart extends PanacheEntityBase {
     private Cart cart;
     
     @JoinColumn(name = "ID_PRODUCT", referencedColumnName = "ID")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
 
     @Column(name = "QUANTITY")
@@ -53,6 +58,13 @@ public class ProductCart extends PanacheEntityBase {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATED_AT")
     private Date updatedAt;
+
+    public ProductCart() {
+    }
+
+    public static Uni<List<ProductCart>> listAllByIdCart(Integer idCart) {
+        return find("cart.id", idCart).list();
+    }
 
     public Integer getId() {
         return this.id;

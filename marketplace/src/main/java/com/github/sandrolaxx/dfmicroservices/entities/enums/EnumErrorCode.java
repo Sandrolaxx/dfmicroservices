@@ -3,7 +3,8 @@ package com.github.sandrolaxx.dfmicroservices.entities.enums;
 public enum EnumErrorCode {
     
     PRODUTO_NAO_ENCONTRADO("01", "Id do produto informado não existe na base de dados!", 404),
-    ERRO_AO_CADASTRAR_PRODUTO("02", "Ocorreu um erro interno e não foi possível cadastrar o produto!", 502);
+    CARRINHO_NAO_ENCONTRADO("02", "Id do carinho informado não existe na base de dados!", 404),
+    ERRO_AO_CADASTRAR_PRODUTO("15", "Ocorreu um erro interno e não foi possível cadastrar o produto!", 502);
 
     private String key;
 

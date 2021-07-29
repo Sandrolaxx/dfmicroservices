@@ -32,11 +32,11 @@ public class Cart extends PanacheEntityBase {
     @Column(name = "ID")
     private Integer id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cart", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "cart", orphanRemoval = true)
     private List<ProductCart> productCartList;
 
     @CreationTimestamp

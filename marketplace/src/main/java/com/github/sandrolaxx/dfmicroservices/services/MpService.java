@@ -4,6 +4,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.github.sandrolaxx.dfmicroservices.dto.ListProductCartUpdate;
+import com.github.sandrolaxx.dfmicroservices.dto.ProductCartUpdate;
 import com.github.sandrolaxx.dfmicroservices.dto.ProductDto;
 import com.github.sandrolaxx.dfmicroservices.entities.Cart;
 import com.github.sandrolaxx.dfmicroservices.entities.Product;
@@ -17,6 +19,17 @@ import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped
 public class MpService {
+    
+    public Multi<ProductDto> listProducts() {
+
+        Multi<Object> productList = Product.listAll()
+                                            .onItem()
+                                            .transformToMulti(m -> Multi.createFrom().iterable(m));
+
+        return productList.onItem()
+                            .transform(m -> new ProductDto((Product) m));
+
+    }
     
     public Uni<Response> addProductToCart(Integer idCart, 
         Integer idProduct, Integer quantity) throws FrostException {
@@ -36,21 +49,55 @@ public class MpService {
                     
                                 return Panache.withTransaction(productCart::persist);       
                             })
-                            .onItem().ifNull().failWith(new FrostException(EnumErrorCode.ERRO_AO_CADASTRAR_PRODUTO)); 
+                            .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO)); 
                         })
                         .onItem().ifNull().failWith(new FrostException(EnumErrorCode.PRODUTO_NAO_ENCONTRADO))
                         .onItem().ifNotNull().transform(p -> Response.ok().status(Status.CREATED).build());
         
     }
 
-    public Multi<ProductDto> listProducts() {
+    public Uni<Cart> listAllCart(Integer idCart) {
+        return Cart.findById(idCart);
+    }
 
-        Multi<Object> productList = Product.listAll()
-                                           .onItem()
-                                           .transformToMulti(m -> Multi.createFrom().iterable(m));
+    public Uni<Response> updateCart(Integer idCart, ListProductCartUpdate listToUpdate) {
 
-        return productList.onItem()
-                          .transform(m -> new ProductDto((Product) m));
+        return Cart.<Cart>findById(idCart)
+            .onItem()
+            .ifNotNull()
+            .call(c -> {
+                Multi<ProductCartUpdate> productsCartUpdate = Multi.createFrom().items(listToUpdate.getListToUpdate().stream());
+                Multi<ProductCart> cartProducts = Multi.createFrom().items(c.getProductCartList().stream());
+
+                productsCartUpdate.onItem().call(pcu -> {
+                    return cartProducts.onItem().call(cp -> {
+                        if (pcu.getProductId() == cp.getId()) {
+                            
+                            if (!pcu.isRemoved()) {
+                                if (pcu.getQuantityToAdd() != null 
+                                && pcu.getQuantityToAdd() != 0) {
+                                    cp.setQuantity(cp.getQuantity() + pcu.getQuantityToAdd());
+                                }
+                                
+                                if (pcu.getQuantityToRemove() != null 
+                                && pcu.getQuantityToRemove() != 0) {
+                                    cp.setQuantity(cp.getQuantity() + pcu.getQuantityToAdd());
+                                }
+                                
+                            } else {
+                                cp.setRemoved(true);
+                            }
+                            
+                        }
+                        return Uni.createFrom().item(cp);
+                    });
+                    
+                });
+                
+                return Uni.createFrom().item(c);
+            })
+            .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO))
+            .onItem().ifNotNull().transform(c -> Response.ok().status(Status.NO_CONTENT).build());
 
     }
 
