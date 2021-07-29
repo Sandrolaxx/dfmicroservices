@@ -69,9 +69,11 @@ public class MpService {
                 Multi<ProductCartUpdate> productsCartUpdate = Multi.createFrom().items(listToUpdate.getListToUpdate().stream());
                 Multi<ProductCart> cartProducts = Multi.createFrom().items(c.getProductCartList().stream());
 
-                productsCartUpdate.onItem().call(pcu -> {
-                    return cartProducts.onItem().call(cp -> {
-                        if (pcu.getProductId() == cp.getId()) {
+                    return cartProducts.call(cp -> {
+                        
+                        Uni<ProductCartUpdate> productToUpdate = productsCartUpdate.filter(item -> item.getProductId() == cp.getProduct().getId()).toUni();
+
+                        return productToUpdate.call(pcu -> {
                             
                             if (!pcu.isRemoved()) {
                                 if (pcu.getQuantityToAdd() != null 
@@ -87,14 +89,14 @@ public class MpService {
                             } else {
                                 cp.setRemoved(true);
                             }
+    
+                        System.out.println(cp.getQuantity());
+                        return Panache.withTransaction(cp::persistAndFlush);
+
+                        });
                             
-                        }
-                        return Uni.createFrom().item(cp);
-                    });
-                    
-                });
+                    }).toUni();
                 
-                return Uni.createFrom().item(c);
             })
             .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO))
             .onItem().ifNotNull().transform(c -> Response.ok().status(Status.NO_CONTENT).build());
