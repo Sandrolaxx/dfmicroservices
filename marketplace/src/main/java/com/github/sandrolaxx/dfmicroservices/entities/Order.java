@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumOrderStatus;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPaymentType;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 @Entity
 @Table(name = "DF_ORDER")

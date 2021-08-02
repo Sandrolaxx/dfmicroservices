@@ -1,6 +1,6 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
-public class ProductCartUpdate {
+public class ProductCart {
     
     private Integer productId;
 
@@ -8,7 +8,7 @@ public class ProductCartUpdate {
 
     private Integer quantityToAdd;
 
-    private boolean removed;
+    private boolean remove;
 
     public Integer getProductId() {
         return productId;
@@ -34,12 +34,12 @@ public class ProductCartUpdate {
         this.quantityToAdd = quantityToAdd;
     }
 
-    public boolean isRemoved() {
-        return removed;
+    public boolean isRemove() {
+        return remove;
     }
 
-    public void setRemoved(boolean removed) {
-        this.removed = removed;
+    public void setRemove(boolean remove) {
+        this.remove = remove;
     }
 
 }

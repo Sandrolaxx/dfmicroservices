@@ -1,7 +1,6 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,8 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
-import io.smallrye.mutiny.Uni;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 @Entity
 @Table(name = "DF_PRODUCT_CART")
@@ -46,9 +44,6 @@ public class ProductCart extends PanacheEntityBase {
     @Column(name = "QUANTITY")
     private Integer quantity;
 
-    @Column(name = "REMOVED")
-    private boolean removed = false;
-
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_AT")
@@ -61,11 +56,7 @@ public class ProductCart extends PanacheEntityBase {
 
     public ProductCart() {
     }
-
-    public static Uni<List<ProductCart>> listAllByIdCart(Integer idCart) {
-        return find("cart.id", idCart).list();
-    }
-
+    
     public Integer getId() {
         return this.id;
     }
@@ -82,10 +73,6 @@ public class ProductCart extends PanacheEntityBase {
         this.cart = cart;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
     public void setProduct(Product product) {
         this.product = product;
     }
@@ -96,14 +83,6 @@ public class ProductCart extends PanacheEntityBase {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public boolean isRemoved() {
-        return this.removed;
-    }
-
-    public void setRemoved(boolean removed) {
-        this.removed = removed;
     }
 
     public Date getCreatedAt() {
