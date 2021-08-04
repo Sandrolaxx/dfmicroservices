@@ -7,13 +7,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,10 +24,8 @@ import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 public class Cart extends PanacheEntityBase {
 
     @Id
-    @SequenceGenerator(name = "ID_CART", sequenceName = "GEN_CART", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_CART")
     @Column(name = "ID")
-    private Integer id;
+    private String id;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
@@ -47,11 +42,11 @@ public class Cart extends PanacheEntityBase {
     @Column(name = "ACTIVE")
     private boolean active;
 
-    public Integer getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -4,6 +4,7 @@ public enum EnumErrorCode {
     
     PRODUTO_NAO_ENCONTRADO("01", "Id do produto informado não existe na base de dados!", 404),
     CARRINHO_NAO_ENCONTRADO("02", "Id do carinho informado não existe na base de dados!", 404),
+    PRODUTO_JA_EXISTENTE_NO_CARRINHO("03", "Produto já está no carrinho adicione outro!", 403),
     ERRO_AO_CADASTRAR_PRODUTO("15", "Ocorreu um erro interno e não foi possível cadastrar o produto!", 502);
 
     private String key;

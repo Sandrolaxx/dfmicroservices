@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -13,13 +14,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.github.sandrolaxx.dfmicroservices.dto.ListProductCartUpdate;
-import com.github.sandrolaxx.dfmicroservices.dto.ProductDto;
 import com.github.sandrolaxx.dfmicroservices.entities.Cart;
 import com.github.sandrolaxx.dfmicroservices.entities.ProductCart;
 import com.github.sandrolaxx.dfmicroservices.services.MpService;
 
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 @Path("/dona-frost/v1")
@@ -31,14 +29,8 @@ public class MpController {
     MpService service;
 
     @GET
-    @Path("/products")
-    public Multi<ProductDto> findAllProducts() {
-        return service.listProducts();
-    }
-
-    @GET
     @Path("/cart")
-    public Uni<List<ProductCart>> findAllCart(@HeaderParam("idCart") Integer idCart) {
+    public Uni<List<ProductCart>> listProductCartByIdCart(@HeaderParam("idCart") String idCart) {
         Uni<Cart> cart = service.listAllCart(idCart);
 
         return cart.onItem().transform(c -> c.getProductCartList());
@@ -47,14 +39,22 @@ public class MpController {
     @POST
     @Path("/cart")
     public Uni<Response> addProductOnCart(@HeaderParam("idProduct") Integer idProduct, 
-        @HeaderParam("idCart") Integer idCart, @HeaderParam("quantity") Integer quantity) {
+        @HeaderParam("idCart") String idCart, @HeaderParam("quantity") Integer quantity) {
         return service.addProductToCart(idCart, idProduct, quantity);
     }
 
     @PUT
     @Path("/cart")
-    public Uni<Response> updateCart(@HeaderParam("idCart") Integer idCart, ListProductCartUpdate listToUpdate) {
-        return service.updateCart(idCart, listToUpdate);
+    public Uni<Response> addQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
+        @HeaderParam("quantity") Integer quantity) {
+        return service.addQuantityToProductCart(idProductCart, quantity);
+    }
+
+    @DELETE
+    @Path("/cart")
+    public Uni<Response> removeQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
+        @HeaderParam("quantity") Integer quantity) {
+        return service.removeQuantityToProductCart(idProductCart, quantity);
     }
 
 }

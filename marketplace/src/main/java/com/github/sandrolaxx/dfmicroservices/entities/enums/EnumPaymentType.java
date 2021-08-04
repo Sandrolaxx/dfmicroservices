@@ -2,8 +2,10 @@ package com.github.sandrolaxx.dfmicroservices.entities.enums;
 
 public enum EnumPaymentType {
 
-    INDIVIDUAL("INDIVIDUAL", "Individual"),    
-    THREE_PEOPLE("THREE_PEOPLE", "3 Pessoas");    
+    CARD_ON_WEB("CARD_ON_WEB", "Cartão no Site"),    
+    CARD_ON_DELIVERY("CARD_ON_DELIVERY", "Cartão na Entrega"),    
+    LIVE_MONEY("LIVE_MONEY", "Dinheiro"),    
+    PIX("PIX", "Pagamento Instantâneo(PIX)");    
     
     private final String key;
     private final String value;

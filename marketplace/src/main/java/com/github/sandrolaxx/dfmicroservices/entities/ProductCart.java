@@ -39,6 +39,10 @@ public class ProductCart extends PanacheEntityBase {
     @ManyToOne(fetch = FetchType.LAZY)
     private Cart cart;
     
+    @JoinColumn(name = "ID_ORDER", referencedColumnName = "ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Order order;
+    
     @JoinColumn(name = "ID_PRODUCT", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
@@ -46,8 +50,8 @@ public class ProductCart extends PanacheEntityBase {
     @Column(name = "QUANTITY")
     private Integer quantity;
 
-    @Column(name = "REMOVED")
-    private boolean removed = false;
+    @Column(name = "ACTIVE")
+    private boolean active = false;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -62,7 +66,7 @@ public class ProductCart extends PanacheEntityBase {
     public ProductCart() {
     }
 
-    public static Uni<List<ProductCart>> listAllByIdCart(Integer idCart) {
+    public static Uni<List<ProductCart>> listAllByIdCart(String idCart) {
         return find("cart.id", idCart).list();
     }
 
@@ -98,12 +102,12 @@ public class ProductCart extends PanacheEntityBase {
         this.quantity = quantity;
     }
 
-    public boolean isRemoved() {
-        return this.removed;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setRemoved(boolean removed) {
-        this.removed = removed;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Date getCreatedAt() {

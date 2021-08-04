@@ -67,7 +67,7 @@ public class UserRepository {
                                         "($1, $2)") 
                           .execute(Tuple.tuple()
                                         .addInteger(user.getId())
-                                        .addBoolean(Boolean.TRUE)
+                                        .addBoolean(true)
                           );
               });
 
