@@ -3,6 +3,7 @@ package com.github.sandrolaxx.dfmicroservices.entities;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +17,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 
 @Entity
 @Table(name = "DF_CART")
@@ -30,7 +31,7 @@ public class Cart extends PanacheEntityBase {
     @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
     private User user;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cart", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "cart", orphanRemoval = true)
     private List<ProductCart> productCartList;
 
     @CreationTimestamp

@@ -1,5 +1,7 @@
 package com.github.sandrolaxx.dfmicroservices.Controllers;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -12,8 +14,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.github.sandrolaxx.dfmicroservices.dto.ListProductCart;
+import com.github.sandrolaxx.dfmicroservices.entities.Cart;
+import com.github.sandrolaxx.dfmicroservices.entities.ProductCart;
 import com.github.sandrolaxx.dfmicroservices.services.MpService;
+
+import io.smallrye.mutiny.Uni;
 
 @Path("/dona-frost/v1")
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,26 +30,31 @@ public class MpController {
 
     @GET
     @Path("/cart")
-    public Response listProductsByIdCart(@HeaderParam("idCart") Integer idCart) {
-        return Response.ok().build();
+    public Uni<List<ProductCart>> listProductCartByIdCart(@HeaderParam("idCart") String idCart) {
+        Uni<Cart> cart = service.listAllCart(idCart);
+
+        return cart.onItem().transform(c -> c.getProductCartList());
     }
 
     @POST
     @Path("/cart")
-    public Response addProductsOnCart(@HeaderParam("idCart") Integer idCart, ListProductCart listProducts) {
-        return service.addProductsToCart(idCart, listProducts);
+    public Uni<Response> addProductOnCart(@HeaderParam("idProduct") Integer idProduct, 
+        @HeaderParam("idCart") String idCart, @HeaderParam("quantity") Integer quantity) {
+        return service.addProductToCart(idCart, idProduct, quantity);
     }
 
     @PUT
     @Path("/cart")
-    public Response updateCart(@HeaderParam("idCart") Integer idCart, ListProductCart listProducts) {
-        return Response.ok().build();
+    public Uni<Response> addQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
+        @HeaderParam("quantity") Integer quantity) {
+        return service.addQuantityToProductCart(idProductCart, quantity);
     }
 
     @DELETE
     @Path("/cart")
-    public Response deleteProducts(@HeaderParam("idCart") Integer idCart, ListProductCart listProducts) {
-        return Response.ok().build();
+    public Uni<Response> removeQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
+        @HeaderParam("quantity") Integer quantity) {
+        return service.removeQuantityToProductCart(idProductCart, quantity);
     }
 
 }

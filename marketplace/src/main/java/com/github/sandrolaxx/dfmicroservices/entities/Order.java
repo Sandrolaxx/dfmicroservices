@@ -26,7 +26,7 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPaymentType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 
 @Entity
 @Table(name = "DF_ORDER")

@@ -15,7 +15,7 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 
 @Entity
 @Cacheable
@@ -154,6 +154,13 @@ public class Product extends PanacheEntityBase {
 
     public void setMessageType(EnumMessageType messageType) {
         this.messageType = messageType;
+    }
+
+    @Override
+    public String toString() {
+        return "Product [category=" + category + ", description=" + description + ", discount=" + discount + ", id="
+                + id + ", imageUri=" + imageUri + ", messageType=" + messageType + ", name=" + name + ", plateSize="
+                + plateSize + ", price=" + price + "]";
     }
 
 }
