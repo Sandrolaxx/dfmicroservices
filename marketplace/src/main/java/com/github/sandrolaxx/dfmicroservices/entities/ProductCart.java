@@ -37,6 +37,10 @@ public class ProductCart extends PanacheEntityBase {
     @ManyToOne(fetch = FetchType.LAZY)
     private Cart cart;
     
+    @JoinColumn(name = "ID_ORDER", referencedColumnName = "ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Order order;
+    
     @JoinColumn(name = "ID_PRODUCT", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.EAGER)
     private Product product;

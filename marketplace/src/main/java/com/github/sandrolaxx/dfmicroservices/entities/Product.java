@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.github.sandrolaxx.dfmicroservices.dto.ProductDto;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
@@ -60,20 +59,6 @@ public class Product extends PanacheEntityBase {
 
     @Transient
     private EnumMessageType messageType;
-
-    public Product() {
-    }
-
-    public Product(ProductDto dto) {
-        this.id = dto.getId();
-        this.name = dto.getName();
-        this.price = dto.getPrice();
-        this.discount = dto.getDiscount();
-        this.description = dto.getDescription();
-        this.imageUri = dto.getImageUri();
-        this.active = dto.isActive();
-        this.plateSize = dto.getPlateSize();
-    }
 
     public Integer getId() {
         return this.id;

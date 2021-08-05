@@ -2,8 +2,10 @@ package com.github.sandrolaxx.dfmicroservices.entities.enums;
 
 public enum EnumOrderStatus {
 
-    INDIVIDUAL("INDIVIDUAL", "Individual"),    
-    THREE_PEOPLE("THREE_PEOPLE", "3 Pessoas");    
+    AWAITING_PAYMENT("AWAITING_PAYMENT", "Aguardando Pagamento"),    
+    AWAITING_DELIVERY("AWAITING_DELIVERY", "Aguardando Entrega"),    
+    IN_DELIVERY("IN_DELIVERY", "Realizando Entrega"),    
+    FINISHED("FINISHED", "Finalizado");    
     
     private final String key;
     private final String value;
