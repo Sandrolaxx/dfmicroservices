@@ -10,7 +10,7 @@ import javax.ws.rs.ext.Provider;
 import com.github.sandrolaxx.dfmicroservices.dto.FrostExceptionResponseDto;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumErrorCode;
 
-import org.jboss.resteasy.util.DateUtil;
+import org.jboss.resteasy.reactive.common.util.DateUtil;
 
 /**
  *

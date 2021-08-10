@@ -16,6 +16,8 @@ import javax.ws.rs.core.Response;
 
 import com.github.sandrolaxx.dfmicroservices.entities.Cart;
 import com.github.sandrolaxx.dfmicroservices.entities.ProductCart;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumOrderStatus;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPaymentType;
 import com.github.sandrolaxx.dfmicroservices.services.MpService;
 
 import io.smallrye.mutiny.Uni;
@@ -39,22 +41,36 @@ public class MpController {
     @POST
     @Path("/cart")
     public Uni<Response> addProductOnCart(@HeaderParam("idProduct") Integer idProduct, 
-        @HeaderParam("idCart") String idCart, @HeaderParam("quantity") Integer quantity) {
+                @HeaderParam("idCart") String idCart, @HeaderParam("quantity") Integer quantity) {
         return service.addProductToCart(idCart, idProduct, quantity);
     }
 
     @PUT
     @Path("/cart")
     public Uni<Response> addQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
-        @HeaderParam("quantity") Integer quantity) {
+                @HeaderParam("quantity") Integer quantity) {
         return service.addQuantityToProductCart(idProductCart, quantity);
     }
 
     @DELETE
     @Path("/cart")
     public Uni<Response> removeQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
-        @HeaderParam("quantity") Integer quantity) {
+                @HeaderParam("quantity") Integer quantity) {
         return service.removeQuantityToProductCart(idProductCart, quantity);
+    }
+
+    @GET
+    @Path("/order")
+    public Uni<Response> listOrders(@HeaderParam("idUser") Integer idUser, 
+                @HeaderParam("payType") EnumOrderStatus orderStatus) {
+        return service.listOrders(idUser, orderStatus);
+    }
+
+    @POST
+    @Path("/order")
+    public Uni<Response> cartToOrder(@HeaderParam("idCart") String idCart, 
+                @HeaderParam("payType") EnumPaymentType payType) {
+        return service.cartToOrder(idCart, payType);
     }
 
 }

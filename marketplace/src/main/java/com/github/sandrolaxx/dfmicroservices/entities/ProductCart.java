@@ -36,11 +36,11 @@ public class ProductCart extends PanacheEntityBase {
     private Integer id;
 
     @JoinColumn(name = "ID_CART", referencedColumnName = "ID")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Cart cart;
     
     @JoinColumn(name = "ID_ORDER", referencedColumnName = "ID")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Order order;
     
     @JoinColumn(name = "ID_PRODUCT", referencedColumnName = "ID")
@@ -124,6 +124,14 @@ public class ProductCart extends PanacheEntityBase {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
 }

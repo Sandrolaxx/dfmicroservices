@@ -38,7 +38,7 @@ public class Order extends PanacheEntityBase {
     @Column(name = "ID")
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
     private User user;
 
@@ -60,10 +60,10 @@ public class Order extends PanacheEntityBase {
     private String addressDescription;
     
     @Column(name = "LATITUDE")
-    private Double lititude;
+    private String lititude;
     
     @Column(name = "LONGITUDE")
-    private Double longitude;
+    private String longitude;
     
     @Column(name = "TOTAL")
     private Double total;
@@ -126,19 +126,19 @@ public class Order extends PanacheEntityBase {
         this.addressDescription = addressDescription;
     }
 
-    public Double getLititude() {
+    public String getLititude() {
         return this.lititude;
     }
 
-    public void setLititude(Double lititude) {
+    public void setLititude(String lititude) {
         this.lititude = lititude;
     }
 
-    public Double getLongitude() {
+    public String getLongitude() {
         return this.longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
@@ -164,6 +164,14 @@ public class Order extends PanacheEntityBase {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<ProductCart> getProductOrderList() {
+        return productOrderList;
+    }
+
+    public void setProductOrderList(List<ProductCart> productOrderList) {
+        this.productOrderList = productOrderList;
     }
 
 }
