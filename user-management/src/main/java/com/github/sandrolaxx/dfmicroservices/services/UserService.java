@@ -74,15 +74,15 @@ public class UserService {
         }
 
         updatedUser.setName(dto.getName() == null ? updatedUser.getName()
-                : EncryptUtil.textEncrypt(dto.getName(), updatedUser.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getName(), updatedUser.getSecret()));
         updatedUser.setEmail(dto.getEmail() == null ? updatedUser.getEmail()
-                : EncryptUtil.textEncrypt(dto.getEmail(), updatedUser.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getEmail(), updatedUser.getSecret()));
         updatedUser.setPhone(dto.getPhone() == null ? updatedUser.getPhone()
-                : EncryptUtil.textEncrypt(dto.getPhone(), updatedUser.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getPhone(), updatedUser.getSecret()));
         updatedUser.setDocument(dto.getDocument() == null ? updatedUser.getDocument()
-                : EncryptUtil.textEncrypt(dto.getDocument(), updatedUser.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getDocument(), updatedUser.getSecret()));
         updatedUser.setPassword(dto.getPassword() == null ? updatedUser.getPassword()
-                : EncryptUtil.textEncrypt(dto.getPassword(), updatedUser.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getPassword(), updatedUser.getSecret()));
         updatedUser.setActive(dto.isActive() == updatedUser.isActive()  ? 
                 updatedUser.isActive() : dto.isActive());
         updatedUser.setAcceptTerms(dto.isAcceptTerms() == updatedUser.isAcceptTerms() ? 
@@ -146,13 +146,13 @@ public class UserService {
         updatedAddress.setNumberAp(dto.getNumberAp() == null ? updatedAddress.getNumberAp() : dto.getNumberAp());
         updatedAddress.setMain(dto.isMain() == updatedAddress.isMain() ? updatedAddress.isMain() : dto.isMain());
         updatedAddress.setDistrict(dto.getDistrict() == null ? updatedAddress.getDistrict()
-                : EncryptUtil.textEncrypt(dto.getDistrict(), updatedAddress.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getDistrict(), updatedAddress.getSecret()));
         updatedAddress.setLatitude(dto.getLatitude() == null ? updatedAddress.getLatitude()
-                : EncryptUtil.textEncrypt(dto.getLatitude(), updatedAddress.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getLatitude(), updatedAddress.getSecret()));
         updatedAddress.setLatitude(dto.getLatitude() == null ? updatedAddress.getLatitude()
-                : EncryptUtil.textEncrypt(dto.getLatitude(), updatedAddress.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getLatitude(), updatedAddress.getSecret()));
         updatedAddress.setStreet(dto.getStreet() == null ? updatedAddress.getStreet()
-                : EncryptUtil.textEncrypt(dto.getStreet(), updatedAddress.getSecret().substring(0, 16)));
+                : EncryptUtil.textEncrypt(dto.getStreet(), updatedAddress.getSecret()));
 
         return updatedAddress;
 

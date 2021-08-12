@@ -78,11 +78,11 @@ public class User extends PanacheEntityBase {
 
     @PrePersist
     private void encryptSensitiveData() {
-        this.document = EncryptUtil.textEncrypt(this.document, secret.substring(0, 16));
-        this.email = EncryptUtil.textEncrypt(this.email, secret.substring(0, 16));
-        this.password = EncryptUtil.textEncrypt(this.password, secret.substring(0, 16));
-        this.phone = EncryptUtil.textEncrypt(this.phone, secret.substring(0, 16));
-        this.name = EncryptUtil.textEncrypt(this.name, secret.substring(0, 16));
+        this.document = EncryptUtil.textEncrypt(this.document, secret);
+        this.email = EncryptUtil.textEncrypt(this.email, secret);
+        this.password = EncryptUtil.textEncrypt(this.password, secret);
+        this.phone = EncryptUtil.textEncrypt(this.phone, secret);
+        this.name = EncryptUtil.textEncrypt(this.name, secret);
     }
 
     public User() {

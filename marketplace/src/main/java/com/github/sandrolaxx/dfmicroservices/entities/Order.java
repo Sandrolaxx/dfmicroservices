@@ -1,7 +1,9 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -27,6 +30,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.smallrye.mutiny.Uni;
 
 @Entity
 @Table(name = "DF_ORDER")
@@ -56,14 +60,9 @@ public class Order extends PanacheEntityBase {
     @Enumerated(EnumType.STRING)
     private EnumPaymentType paymentType;
     
-    @Column(name = "ADDRESS_DESCRIPTION")
-    private String addressDescription;
-    
-    @Column(name = "LATITUDE")
-    private String lititude;
-    
-    @Column(name = "LONGITUDE")
-    private String longitude;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_ADDRESS", referencedColumnName = "ID")
+    private Address address;
     
     @Column(name = "TOTAL")
     private Double total;
@@ -77,6 +76,25 @@ public class Order extends PanacheEntityBase {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATED_AT")
     public Date updatedAt;
+
+    public Order() {
+    }
+
+    public static Uni<List<Order>> findAllOrdersByidUser(Integer idUser, EnumOrderStatus orderStatus) {
+        
+        Map<String, Object> params = new HashMap<>();
+        String query = "user.id = :idUser";
+
+        params.put("idUser", idUser);
+        
+        if (orderStatus != null) {
+            params.put("orderStatus", orderStatus);
+            query = "user.id = :idUser and orderStatus = :orderStatus";
+        }
+
+        return find(query, params).list();
+        
+    }
 
     public Integer getId() {
         return this.id;
@@ -118,28 +136,12 @@ public class Order extends PanacheEntityBase {
         this.paymentType = paymentType;
     }
 
-    public String getAddressDescription() {
-        return this.addressDescription;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddressDescription(String addressDescription) {
-        this.addressDescription = addressDescription;
-    }
-
-    public String getLititude() {
-        return this.lititude;
-    }
-
-    public void setLititude(String lititude) {
-        this.lititude = lititude;
-    }
-
-    public String getLongitude() {
-        return this.longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public Double getTotal() {

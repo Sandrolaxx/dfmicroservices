@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,7 +21,7 @@ public class Address extends PanacheEntityBase {
     @Id
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_USER", referencedColumnName = "ID")
     private User user;
 

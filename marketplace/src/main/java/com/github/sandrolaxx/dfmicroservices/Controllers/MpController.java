@@ -62,7 +62,7 @@ public class MpController {
     @GET
     @Path("/order")
     public Uni<Response> listOrders(@HeaderParam("idUser") Integer idUser, 
-                @HeaderParam("payType") EnumOrderStatus orderStatus) {
+                @HeaderParam("orderStatus") EnumOrderStatus orderStatus) {
         return service.listOrders(idUser, orderStatus);
     }
 

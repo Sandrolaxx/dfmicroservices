@@ -1,5 +1,6 @@
 package com.github.sandrolaxx.dfmicroservices.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,6 +15,7 @@ import com.github.sandrolaxx.dfmicroservices.entities.ProductCart;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumErrorCode;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumOrderStatus;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPaymentType;
+import com.github.sandrolaxx.dfmicroservices.utils.EncryptUtil;
 import com.github.sandrolaxx.dfmicroservices.utils.FrostException;
 
 import io.quarkus.hibernate.reactive.panache.Panache;
@@ -122,9 +124,7 @@ public class MpService {
                                     p.setOrder(order);
                                 });
 
-                        order.setAddressDescription(this.getAddressDescription(address));
-                        order.setLititude(address.getLatitude());
-                        order.setLongitude(address.getLongitude());
+                        order.setAddress(address);
                         order.setDeliveryValue(12.0);
 
                         order.setOrderStatus(EnumOrderStatus.AWAITING_PAYMENT);
@@ -140,10 +140,6 @@ public class MpService {
                     .onItem().ifNotNull().transform(c -> Response.ok().status(Status.CREATED).build())
                     .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
 
-    }
-
-    public Uni<Response> listOrders(Integer idUser, EnumOrderStatus status) {
-        return null;//retornar List<Uni<Order>> descriptografado
     }
 
     public Double sumTotal(ProductCart productCart) {
@@ -162,8 +158,33 @@ public class MpService {
 
     public String getAddressDescription(Address adr) {
         return adr.getDistrict().concat(",").concat(adr.getStreet()).concat(",")
-                                    .concat(adr.getNumber().toString())
-                                    .concat(adr.getNumberAp() == null ? "" : "-".concat(adr.getNumberAp().toString()));  
+                                .concat(adr.getNumber().toString())
+                                .concat(adr.getNumberAp() == null ? "" : "-".concat(adr.getNumberAp().toString()));  
+    }
+
+
+    public Uni<Response> listOrders(Integer idUser, EnumOrderStatus orderStatus) {
+        Uni<List<Order>> uniListOrder = Order.findAllOrdersByidUser(idUser, orderStatus);
+        
+        return uniListOrder.onItem()
+                    .ifNotNull().transform(order -> {
+                        
+                        List<Order> listOrder = new ArrayList<>();
+                        
+                        order.stream().forEach(o -> {
+                            Order item = new Order();
+                            Address adr = o.getAddress();
+
+                            System.out.println(EncryptUtil.textDecrypt(adr.getLatitude(), adr.getSecret()));
+                            
+                            // item.setLongitude(EncryptUtil.textDecrypt(o.getLongitude(), secret));
+
+                            listOrder.add(item);
+                        });
+
+                        return Response.ok(listOrder).build();
+                    })
+                    .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
     }
 
 }
