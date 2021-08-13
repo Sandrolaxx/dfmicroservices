@@ -80,8 +80,8 @@ public class Address extends PanacheEntityBase {
     private void encryptSensitiveData() {
         this.district = EncryptUtil.textEncrypt(this.district, secret);
         this.street = EncryptUtil.textEncrypt(this.street, secret);
-        this.latitude = EncryptUtil.textEncrypt(this.street, secret);
-        this.longitude = EncryptUtil.textEncrypt(this.street, secret);
+        this.latitude = EncryptUtil.textEncrypt(this.latitude, secret);
+        this.longitude = EncryptUtil.textEncrypt(this.longitude, secret);
     }
 
     public Address() {

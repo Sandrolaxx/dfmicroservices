@@ -19,6 +19,7 @@ import com.github.sandrolaxx.dfmicroservices.entities.ProductCart;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumOrderStatus;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPaymentType;
 import com.github.sandrolaxx.dfmicroservices.services.MpService;
+import com.github.sandrolaxx.dfmicroservices.utils.ValidateUtil;
 
 import io.smallrye.mutiny.Uni;
 
@@ -33,15 +34,20 @@ public class MpController {
     @GET
     @Path("/cart")
     public Uni<List<ProductCart>> listProductCartByIdCart(@HeaderParam("idCart") String idCart) {
+        
+        ValidateUtil.validateIdCart(idCart);
         Uni<Cart> cart = service.listAllCart(idCart);
 
-        return cart.onItem().transform(c -> c.getProductCartList());
+        return cart.onItem()
+                   .transform(c -> c.getProductCartList());
+
     }
 
     @POST
     @Path("/cart")
     public Uni<Response> addProductOnCart(@HeaderParam("idProduct") Integer idProduct, 
                 @HeaderParam("idCart") String idCart, @HeaderParam("quantity") Integer quantity) {
+        ValidateUtil.validateNewProductOnCart(idProduct, idCart, quantity);            
         return service.addProductToCart(idCart, idProduct, quantity);
     }
 
@@ -49,6 +55,7 @@ public class MpController {
     @Path("/cart")
     public Uni<Response> addQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
                 @HeaderParam("quantity") Integer quantity) {
+        ValidateUtil.validateAddQuantity(idProductCart, quantity);            
         return service.addQuantityToProductCart(idProductCart, quantity);
     }
 
@@ -56,6 +63,7 @@ public class MpController {
     @Path("/cart")
     public Uni<Response> removeQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
                 @HeaderParam("quantity") Integer quantity) {
+        ValidateUtil.validateRemoveQuantity(idProductCart, quantity);            
         return service.removeQuantityToProductCart(idProductCart, quantity);
     }
 
@@ -63,6 +71,7 @@ public class MpController {
     @Path("/order")
     public Uni<Response> listOrders(@HeaderParam("idUser") Integer idUser, 
                 @HeaderParam("orderStatus") EnumOrderStatus orderStatus) {
+        ValidateUtil.validateIdUser(idUser);            
         return service.listOrders(idUser, orderStatus);
     }
 
@@ -70,6 +79,7 @@ public class MpController {
     @Path("/order")
     public Uni<Response> cartToOrder(@HeaderParam("idCart") String idCart, 
                 @HeaderParam("payType") EnumPaymentType payType) {
+        ValidateUtil.validateNewOrder(idCart, payType);           
         return service.cartToOrder(idCart, payType);
     }
 

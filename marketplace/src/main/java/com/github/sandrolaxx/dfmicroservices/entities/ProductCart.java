@@ -36,11 +36,11 @@ public class ProductCart extends PanacheEntityBase {
     private Integer id;
 
     @JoinColumn(name = "ID_CART", referencedColumnName = "ID")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Cart cart;
     
     @JoinColumn(name = "ID_ORDER", referencedColumnName = "ID")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private Order order;
     
     @JoinColumn(name = "ID_PRODUCT", referencedColumnName = "ID")

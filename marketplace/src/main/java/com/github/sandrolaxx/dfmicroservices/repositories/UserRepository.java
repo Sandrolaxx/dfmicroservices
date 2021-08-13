@@ -50,7 +50,7 @@ public class UserRepository {
                                         .addString(adrress.getState())
                                         .addString(adrress.getCity())
                                         .addString(adrress.getDistrict())
-                                        .addString(adrress.getSecret())
+                                        .addString(adrress.getStreet())
                                         .addInteger(adrress.getNumber())
                                         .addInteger(adrress.getNumberAp())
                                         .addString(adrress.getLatitude())

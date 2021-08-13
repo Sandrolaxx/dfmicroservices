@@ -7,6 +7,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.github.sandrolaxx.dfmicroservices.dto.OrderDto;
+import com.github.sandrolaxx.dfmicroservices.dto.ProductOrderDto;
 import com.github.sandrolaxx.dfmicroservices.entities.Address;
 import com.github.sandrolaxx.dfmicroservices.entities.Cart;
 import com.github.sandrolaxx.dfmicroservices.entities.Order;
@@ -39,7 +41,8 @@ public class MpService {
                             .call(c -> {
 
                                 boolean existsProduct = c.getProductCartList().stream()
-                                                                              .filter(pc -> pc != null && pc.getProduct() != null
+                                                                              .filter(pc -> pc != null 
+                                                                                        && pc.getProduct() != null
                                                                                         && pc.getProduct().getId() == p.getId())
                                                                               .findFirst()
                                                                               .isPresent();
@@ -142,49 +145,60 @@ public class MpService {
 
     }
 
-    public Double sumTotal(ProductCart productCart) {
-        System.out.println("----------------------------------------------------");
-        System.out.println(productCart.getProduct().getPrice());
-        System.out.println(productCart.getProduct().getDiscount());
-        System.out.println(productCart.getQuantity());
-        System.out.println(total);
-        System.out.println("----------------------------------------------------");
-        
-        total += (productCart.getProduct().getPrice() - productCart.getProduct().getDiscount()) * productCart.getQuantity();
-        
-        System.out.println(total);
-        return total;
-    }
-
-    public String getAddressDescription(Address adr) {
-        return adr.getDistrict().concat(",").concat(adr.getStreet()).concat(",")
-                                .concat(adr.getNumber().toString())
-                                .concat(adr.getNumberAp() == null ? "" : "-".concat(adr.getNumberAp().toString()));  
-    }
-
-
     public Uni<Response> listOrders(Integer idUser, EnumOrderStatus orderStatus) {
+        
         Uni<List<Order>> uniListOrder = Order.findAllOrdersByidUser(idUser, orderStatus);
         
         return uniListOrder.onItem()
-                    .ifNotNull().transform(order -> {
+                    .ifNotNull().transform(orderList -> {
                         
-                        List<Order> listOrder = new ArrayList<>();
+                        List<OrderDto> listOrderDto = new ArrayList<>();
                         
-                        order.stream().forEach(o -> {
-                            Order item = new Order();
-                            Address adr = o.getAddress();
+                        orderList.stream().forEach(order -> {
 
-                            System.out.println(EncryptUtil.textDecrypt(adr.getLatitude(), adr.getSecret()));
+                            OrderDto orderDto = new OrderDto();
+                            List<ProductOrderDto> listProductOrderDto = new ArrayList<>(); 
+                            Address adr = order.getAddress();
+
+                            order.getProductOrderList().stream().forEach(productOrder -> {
+                                ProductOrderDto productDto = new ProductOrderDto();
+
+                                productDto.setProduct(productOrder.getProduct());
+                                productDto.setQuantity(productOrder.getQuantity());
+
+                                listProductOrderDto.add(productDto);
+                            });
+
+                            orderDto.setTotal(order.getTotal());
+                            orderDto.setDeliveryValue(order.getDeliveryValue());
+
+                            orderDto.setLatitude(Double.valueOf(EncryptUtil.textDecrypt(adr.getLatitude(), adr.getSecret())));
+                            orderDto.setLongitude(Double.valueOf(EncryptUtil.textDecrypt(adr.getLongitude(), adr.getSecret())));
                             
-                            // item.setLongitude(EncryptUtil.textDecrypt(o.getLongitude(), secret));
+                            orderDto.setDistrict(EncryptUtil.textDecrypt(adr.getDistrict(), adr.getSecret()));
+                            orderDto.setStreet(EncryptUtil.textDecrypt(adr.getStreet(), adr.getSecret()));
+                            orderDto.setNumber(adr.getNumber());
+                            orderDto.setNumberAp(adr.getNumberAp());
 
-                            listOrder.add(item);
+                            orderDto.setProductsOrder(listProductOrderDto);
+                            orderDto.setOrderStatus(order.getOrderStatus());
+                            orderDto.setPayType(order.getPaymentType());
+
+                            listOrderDto.add(orderDto);
+
                         });
 
-                        return Response.ok(listOrder).build();
+                        return Response.ok(listOrderDto).build();
+
                     })
-                    .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
+                    .onItem().ifNull().failWith(new FrostException(EnumErrorCode.NENHUM_PEDIDO_ENCONTRADO));
+                    
+    }
+
+    public Double sumTotal(ProductCart productCart) {
+        total += (productCart.getProduct().getPrice() - productCart.getProduct().getDiscount()) * productCart.getQuantity();
+        
+        return total;
     }
 
 }
