@@ -151,15 +151,14 @@ public class MpService {
         
         return uniListOrder.onItem()
                     .ifNotNull().transform(orderList -> {
-                        
+
                         List<OrderDto> listOrderDto = new ArrayList<>();
                         
                         orderList.stream().forEach(order -> {
-
                             OrderDto orderDto = new OrderDto();
                             List<ProductOrderDto> listProductOrderDto = new ArrayList<>(); 
                             Address adr = order.getAddress();
-
+                            
                             order.getProductOrderList().stream().forEach(productOrder -> {
                                 ProductOrderDto productDto = new ProductOrderDto();
 
@@ -174,7 +173,6 @@ public class MpService {
 
                             orderDto.setLatitude(Double.valueOf(EncryptUtil.textDecrypt(adr.getLatitude(), adr.getSecret())));
                             orderDto.setLongitude(Double.valueOf(EncryptUtil.textDecrypt(adr.getLongitude(), adr.getSecret())));
-                            
                             orderDto.setDistrict(EncryptUtil.textDecrypt(adr.getDistrict(), adr.getSecret()));
                             orderDto.setStreet(EncryptUtil.textDecrypt(adr.getStreet(), adr.getSecret()));
                             orderDto.setNumber(adr.getNumber());
@@ -187,7 +185,6 @@ public class MpService {
                             listOrderDto.add(orderDto);
 
                         });
-
                         return Response.ok(listOrderDto).build();
 
                     })
