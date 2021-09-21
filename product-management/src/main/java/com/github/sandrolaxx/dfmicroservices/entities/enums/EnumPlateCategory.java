@@ -8,7 +8,8 @@ public enum EnumPlateCategory {
     LACTOSE_FREE("LACTOSE_FREE", "Sem Lactose"),
     HIGH_PROTEIN("HIGH_PROTEIN", "Rico em Proteína"),    
     NO_GLUTEN("NO_GLUTEN", "Sem Glúten"),    
-    VEGETARIAN("VEGETARIAN", "Vegerariano"); 
+    VEGAN("VEGAN", "Vegano"), 
+    VEGETARIAN("VEGETARIAN", "Vegetariano"); 
 
     private final String key;
     private final String value;
