@@ -29,7 +29,7 @@ public class ProductRepository {
                             .addString(product.getName())
                             .addString(product.getDescription())
                             .addString(product.getImageUri())
-                            .addValue(product.getCategory())
+                            .addValue(product.getCategoryList())
                             .addValue(product.getPlateSize())
                             .addDouble(product.getPrice())
                             .addDouble(product.getDiscount())
@@ -57,8 +57,8 @@ public class ProductRepository {
                                             row.getString("description") : product.getDescription())
                                         .addString(product.getImageUri().isEmpty() ? 
                                             row.getString("image_uri") : product.getImageUri())
-                                        .addValue(product.getCategory() == null ? 
-                                            row.getValue("category") : product.getCategory())
+                                        .addValue(product.getCategoryList() == null ? 
+                                            row.getValue("category") : product.getCategoryList())
                                         .addValue(product.getPlateSize() == null ? 
                                             row.getValue("plate_size") : product.getPlateSize())
                                         .addDouble(product.getPrice() == null ? 

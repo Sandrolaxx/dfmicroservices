@@ -1,9 +1,11 @@
 package com.github.sandrolaxx.dfmicroservices.entities;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -47,9 +49,10 @@ public class Product extends PanacheEntityBase {
     @Enumerated(EnumType.STRING)
     private EnumPlateSize plateSize;
 
-    @Column(name = "CATEGORY")
-    @Enumerated(EnumType.STRING)
-    private EnumPlateCategory category;
+    @Column
+    @Enumerated
+    @ElementCollection(targetClass = EnumPlateCategory.class)
+    private List<EnumPlateCategory> categoryList;
 
     @Column(name = "CREATED_AT")
     private Date createdAt;
@@ -124,12 +127,12 @@ public class Product extends PanacheEntityBase {
         this.plateSize = plateSize;
     }
 
-    public EnumPlateCategory getCategory() {
-        return this.category;
+    public List<EnumPlateCategory> getCategoryList() {
+        return categoryList;
     }
 
-    public void setCategory(EnumPlateCategory category) {
-        this.category = category;
+    public void setCategoryList(List<EnumPlateCategory> categoryList) {
+        this.categoryList = categoryList;
     }
 
     public Date getCreatedAt() {
@@ -158,7 +161,7 @@ public class Product extends PanacheEntityBase {
 
     @Override
     public String toString() {
-        return "Product [category=" + category + ", description=" + description + ", discount=" + discount + ", id="
+        return "Product [description=" + description + ", discount=" + discount + ", id="
                 + id + ", imageUri=" + imageUri + ", messageType=" + messageType + ", name=" + name + ", plateSize="
                 + plateSize + ", price=" + price + "]";
     }

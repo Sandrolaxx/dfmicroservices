@@ -65,7 +65,7 @@ public class ProductService {
         updatedProduct.setImageUri(dto.getImageUri() == null ? oldProduct.getImageUri() : dto.getDescription());
         updatedProduct.setActive(dto.getActive() == oldProduct.getActive() ? oldProduct.getActive() : dto.getActive());
         updatedProduct.setPlateSize(dto.getPlateSize() == null ? oldProduct.getPlateSize() : dto.getPlateSize());
-        updatedProduct.setCategory(dto.getCategory() == null ? oldProduct.getCategory() : dto.getCategory());
+        updatedProduct.setCategoryList(dto.getCategoryList().isEmpty() ? oldProduct.getCategoryList() : dto.getCategoryList());
 
         updatedProduct.persistAndFlush();
 
