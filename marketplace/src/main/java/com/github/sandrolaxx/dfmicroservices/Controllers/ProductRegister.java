@@ -24,7 +24,7 @@ public class ProductRegister {
 
         productPropagated.remove("createdAt");
         productPropagated.remove("updatedAt");
-
+        
         ObjectMapper m = new ObjectMapper();
         Product product = m.readValue(productPropagated.toString(), Product.class);
 

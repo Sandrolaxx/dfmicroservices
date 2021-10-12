@@ -1,5 +1,8 @@
 package com.github.sandrolaxx.dfmicroservices.repositories;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -20,21 +23,35 @@ public class ProductRepository {
     public void persist(Product product) {
         
         client.preparedQuery("INSERT INTO DF_PRODUCT "                       +
-                             "(ID, NAME, DESCRIPTION, IMAGE_URI, CATEGORY, " +
+                             "(ID, NAME, DESCRIPTION, IMAGE_URI, "           +
                              "PLATE_SIZE, PRICE, DISCOUNT, ACTIVE) "         +
                              " VALUES "                                      +
-                             "($1, $2, $3, $4, $5, $6, $7, $8, $9)")
+                             "($1, $2, $3, $4, $5, $6, $7, $8)")
               .execute(Tuple.tuple()
                             .addInteger(product.getId())
                             .addString(product.getName())
                             .addString(product.getDescription())
                             .addString(product.getImageUri())
-                            .addValue(product.getCategoryList())
                             .addValue(product.getPlateSize())
                             .addDouble(product.getPrice())
                             .addDouble(product.getDiscount())
                             .addBoolean(product.isActive())
-              );
+              ).onSuccess(tr -> {   
+
+                List<Tuple> batch = new ArrayList<>();
+
+                for (var category : product.getCategoryList()) {
+                    batch.add(Tuple.of(product.getId(), category.getKey()));
+                }
+                
+                client.preparedQuery("INSERT INTO DF_PLATE_CATEGORIES "      +
+                                    "(PRODUCT_ID, CATEGORYLIST)"             +
+                                    " VALUES "                               +
+                                    "($1, $2)")
+                .executeBatch(batch);
+
+                });
+
 
     }
 

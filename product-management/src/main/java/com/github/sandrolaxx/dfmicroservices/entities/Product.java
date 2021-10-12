@@ -3,6 +3,7 @@ package com.github.sandrolaxx.dfmicroservices.entities;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -57,6 +58,7 @@ public class Product extends PanacheEntityBase {
 
     @Column
     @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "DF_PLATE_CATEGORIES")
     @ElementCollection(targetClass = EnumPlateCategory.class)
     private List<EnumPlateCategory> categoryList;
 

@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Cacheable;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -50,7 +51,8 @@ public class Product extends PanacheEntityBase {
     private EnumPlateSize plateSize;
 
     @Column
-    @Enumerated
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "DF_PLATE_CATEGORIES")
     @ElementCollection(targetClass = EnumPlateCategory.class)
     private List<EnumPlateCategory> categoryList;
 
