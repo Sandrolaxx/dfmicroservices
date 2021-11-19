@@ -1,7 +1,8 @@
-package com.github.sandrolaxx.dfmicroservices.Controllers;
+package com.github.sandrolaxx.dfmicroservices.controllers;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,11 +22,21 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPaymentType;
 import com.github.sandrolaxx.dfmicroservices.services.MpService;
 import com.github.sandrolaxx.dfmicroservices.utils.ValidateUtil;
 
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
+import org.eclipse.microprofile.openapi.annotations.security.OAuthFlow;
+import org.eclipse.microprofile.openapi.annotations.security.OAuthFlows;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+
 import io.smallrye.mutiny.Uni;
 
 @Path("/dona-frost/v1")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "Marketplace")
+@RolesAllowed({"users", "Admin"})
+@SecurityScheme(securitySchemeName = "microservices", type = SecuritySchemeType.OAUTH2, flows = 
+@OAuthFlows(password = @OAuthFlow(tokenUrl = "http://localhost:9091/auth/realms/DonaFrost/protocol/openid-connect/token")))
 public class MpController {
 
     @Inject

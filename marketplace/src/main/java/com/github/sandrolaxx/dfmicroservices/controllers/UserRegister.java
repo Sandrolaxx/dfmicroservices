@@ -1,4 +1,4 @@
-package com.github.sandrolaxx.dfmicroservices.Controllers;
+package com.github.sandrolaxx.dfmicroservices.controllers;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

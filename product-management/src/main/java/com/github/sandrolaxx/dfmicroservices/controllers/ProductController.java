@@ -41,9 +41,9 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Product")
-@RolesAllowed("dfmicroservices")
-@SecurityScheme(securitySchemeName = "df-product-oauth", type = SecuritySchemeType.OAUTH2, flows = 
-@OAuthFlows(password = @OAuthFlow(tokenUrl = "http://localhost:9091/auth/realms/dfmicroservices/protocol/openid-connect/token")))
+@RolesAllowed({"users", "Admin"})
+@SecurityScheme(securitySchemeName = "microservices", type = SecuritySchemeType.OAUTH2, flows = 
+@OAuthFlows(password = @OAuthFlow(tokenUrl = "http://localhost:9091/auth/realms/DonaFrost/protocol/openid-connect/token")))
 public class ProductController {
 
     @Inject
