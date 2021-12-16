@@ -2,6 +2,7 @@ package com.github.sandrolaxx.dfmicroservices.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -56,9 +57,9 @@ public class UserService {
 
         User newUser = userMapper.createUserDtoToUser(dto);
 
-        // this.saveUserKeycloak(newUser);
-
         newUser.persistAndFlush();
+        
+        this.saveUserKeycloak(newUser);
 
         return newUser;
 
@@ -189,20 +190,22 @@ public class UserService {
 
         var tokenKey = auth.getNewToken();
 
-        var newUserKey = new CreateUserKeycloakDto();
+        var newUserKeycloak = new CreateUserKeycloakDto();
         var newCredencial = new CreateUserKeycloakCredentialsDto();
         List<CreateUserKeycloakCredentialsDto> credencialList = new ArrayList<>();
 
-        newUserKey.setUsername(newUser.getEmail());
-        newUserKey.setEnabled(true);
+        newUserKeycloak.setUsername(EncryptUtil.textDecrypt(newUser.getEmail(), newUser.getSecret()));
+        newUserKeycloak.setEnabled(true);
 
         newCredencial.setTemporary(false);
-        newCredencial.setValue(newUser.getPassword());
+        newCredencial.setValue(EncryptUtil.textDecrypt(newUser.getPassword(), newUser.getSecret()));
 
         credencialList.add(newCredencial);
-        newUserKey.setCredentials(credencialList);
+        
+        newUserKeycloak.setCredentials(credencialList);
+        newUserKeycloak.setAttributes(Map.of("userId",newUser.getId()));
 
-        var response = restClientKey.createUserKeycloak(tokenKey, newUserKey);
+        var response = restClientKey.createUserKeycloak(tokenKey, newUserKeycloak);
 
         if (response.getStatus() != 201) {
             throw new FrostException(EnumErrorCode.ERRO_AO_CADASTRAR_USUARIO);

@@ -1,10 +1,13 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
 import java.util.List;
+import java.util.Map;
 
 public class CreateUserKeycloakDto {
 
     private String username;
+
+    private Map<String, Integer> attributes;
 
     private List<CreateUserKeycloakCredentialsDto> credentials;
 
@@ -16,6 +19,14 @@ public class CreateUserKeycloakDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Map<String, Integer> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, Integer> attributes) {
+        this.attributes = attributes;
     }
 
     public List<CreateUserKeycloakCredentialsDto> getCredentials() {

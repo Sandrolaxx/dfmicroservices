@@ -18,12 +18,12 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface RestClientKey {
     
   @POST
-  @Path("/admin/realms/dfmicroservices/users")
+  @Path("/admin/realms/DonaFrost/users")
   Response createUserKeycloak(@HeaderParam("Authorization") String tokenKeycloak,
       CreateUserKeycloakDto dto);
   
   @POST
-  @Path("/realms/dfmicroservices/protocol/openid-connect/token")
+  @Path("/realms/DonaFrost/protocol/openid-connect/token")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   TokenResponseDto getNewToken(@HeaderParam("Authorization") String basicToken, Form tokenForm);
 
