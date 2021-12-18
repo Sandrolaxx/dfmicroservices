@@ -3,11 +3,11 @@ package com.github.sandrolaxx.dfmicroservices.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.JsonNumber;
 import javax.transaction.Transactional;
 
 import com.github.sandrolaxx.dfmicroservices.dto.CreateAddressDto;
@@ -28,6 +28,9 @@ import com.github.sandrolaxx.dfmicroservices.utils.RestClientKey;
 import org.eclipse.microprofile.opentracing.Traced;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
+import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal;
+import io.quarkus.security.identity.SecurityIdentity;
+
 @ApplicationScoped
 @Traced(operationName = "UserService")
 public class UserService {
@@ -37,7 +40,7 @@ public class UserService {
 
     @Inject
     @RestClient
-    RestClientKey restClientKey;
+    RestClientKey restClientKeycloak;
 
     @Inject
     AuthService auth;
@@ -94,13 +97,15 @@ public class UserService {
     }
 
     @Transactional()
-    public User deleteUser(Integer idUser) {
+    public User deleteUser(Integer idUser, SecurityIdentity identity) {
+        
+        // Optional<User> userToDelete = User.findByIdOptional(idUser);
 
-        Optional<User> userToDelete = User.findByIdOptional(idUser);
+        // userToDelete.ifPresentOrElse(User::delete, () -> {
+        //     throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
+        // });
 
-        userToDelete.ifPresentOrElse(User::delete, () -> {
-            throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
-        });
+        this.removeUserKeycloak(identity);
 
         return this.defaultUserToPropagate(idUser, null);
 
@@ -188,11 +193,9 @@ public class UserService {
 
     public void saveUserKeycloak(User newUser) {
 
-        var tokenKey = auth.getNewToken();
-
         var newUserKeycloak = new CreateUserKeycloakDto();
         var newCredencial = new CreateUserKeycloakCredentialsDto();
-        List<CreateUserKeycloakCredentialsDto> credencialList = new ArrayList<>();
+        var credencialList = new ArrayList<CreateUserKeycloakCredentialsDto>();
 
         newUserKeycloak.setUsername(EncryptUtil.textDecrypt(newUser.getEmail(), newUser.getSecret()));
         newUserKeycloak.setEnabled(true);
@@ -205,10 +208,25 @@ public class UserService {
         newUserKeycloak.setCredentials(credencialList);
         newUserKeycloak.setAttributes(Map.of("userId",newUser.getId()));
 
-        var response = restClientKey.createUserKeycloak(tokenKey, newUserKeycloak);
+        var tokenKey = auth.getNewToken();
+        var response = restClientKeycloak.createUserKeycloak(tokenKey, newUserKeycloak);
 
         if (response.getStatus() != 201) {
             throw new FrostException(EnumErrorCode.ERRO_AO_CADASTRAR_USUARIO);
+        }
+
+    }
+
+    public void removeUserKeycloak(SecurityIdentity identity) {
+
+        var tokenInfo = (OidcJwtCallerPrincipal) identity.getPrincipal();
+        var userIdKeycloak = (String) tokenInfo.getClaim("sub");
+
+        var tokenKey = auth.getNewToken();
+        var response = restClientKeycloak.removeUserKeycloak(tokenKey, userIdKeycloak);
+
+        if (response.getStatus() != 204) {
+            throw new FrostException(EnumErrorCode.ERRO_AO_DELETAR_USUARIO);
         }
 
     }
@@ -241,6 +259,13 @@ public class UserService {
 
         return user;
 
+    }
+
+    public Integer resolveUserId(SecurityIdentity identity) {
+        var tokenInfo = (OidcJwtCallerPrincipal) identity.getPrincipal();
+        var userId = (JsonNumber) tokenInfo.getClaim("userId");
+
+        return userId.intValue();
     }
 
 }

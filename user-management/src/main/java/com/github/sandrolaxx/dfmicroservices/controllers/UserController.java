@@ -22,8 +22,10 @@ import com.github.sandrolaxx.dfmicroservices.dto.ListUserDto;
 import com.github.sandrolaxx.dfmicroservices.dto.UpdateAddressDto;
 import com.github.sandrolaxx.dfmicroservices.dto.UpdateUserDto;
 import com.github.sandrolaxx.dfmicroservices.entities.User;
+import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumErrorCode;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.services.UserService;
+import com.github.sandrolaxx.dfmicroservices.utils.FrostException;
 
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.SimplyTimed;
@@ -35,14 +37,19 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import io.quarkus.security.identity.SecurityIdentity;
+
+@Tag(name = "User")
 @Path("/dona-frost/v1/user")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Tag(name = "User")
 public class UserController {
 
     @Inject
     UserService userService;
+
+    @Inject
+    SecurityIdentity identity;
 
     @Inject
     @Channel("user")
@@ -55,7 +62,13 @@ public class UserController {
     @SimplyTimed(name = "Tempo simples/médio de busca")
     @Timed(name = "Tempo completo da busca")
     public List<ListUserDto> listAll() {
+
+        if (!identity.hasRole("Admin")) {
+            throw new FrostException(EnumErrorCode.USUARIO_SEM_CREDENCIAIS);
+        }
+
         return userService.findAll();
+
     }
 
     @POST
@@ -63,21 +76,26 @@ public class UserController {
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
     public Response createUser(CreateUserDto dto) {
 
+        if (!identity.hasRole("Admin")) {
+            throw new FrostException(EnumErrorCode.USUARIO_SEM_CREDENCIAIS);
+        }
+
         var user = userService.persistUser(dto);
 
         user.setMessageType(EnumMessageType.CREATE);
-        
+
         emitter.send(user);
-        
+
         return Response.status(Status.CREATED).build();
-        
+
     }
-    
+
     @PUT
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
-    public void updateUser(@HeaderParam("idUser") Integer idUser, UpdateUserDto dto) {
-        
+    public void updateUser(UpdateUserDto dto) {
+
+        var idUser = userService.resolveUserId(identity);
         var user = userService.updateUser(idUser, dto);
 
         user.setMessageType(EnumMessageType.UPDATE);
@@ -90,9 +108,10 @@ public class UserController {
     @DELETE
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
-    public void deleteUser(@HeaderParam("idUser") Integer idUser) {
-        
-        var user = userService.deleteUser(idUser);
+    public void deleteUser() {
+
+        var idUser = userService.resolveUserId(identity);
+        var user = userService.deleteUser(idUser, identity);
 
         user.setMessageType(EnumMessageType.DELETE);
 
@@ -104,8 +123,9 @@ public class UserController {
     @Path("/address")
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
-    public void createAddress(@HeaderParam("idUser") Integer idUser, CreateAddressDto address) {
-        
+    public void createAddress(CreateAddressDto address) {
+
+        var idUser = userService.resolveUserId(identity);
         var adr = userService.createAddress(idUser, address);
         var user = userService.defaultUserToPropagate(idUser, adr);
 
@@ -119,9 +139,9 @@ public class UserController {
     @Path("/address")
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
-    public void updateAddress(@HeaderParam("idUser") Integer idUser, @HeaderParam("idAddress") Integer idAddress,
-            UpdateAddressDto dto) {
+    public void updateAddress(@HeaderParam("idAddress") Integer idAddress, UpdateAddressDto dto) {
 
+        var idUser = userService.resolveUserId(identity);
         var adr = userService.updateAddress(idUser, idAddress, dto);
         var user = userService.defaultUserToPropagate(idUser, adr);
 
@@ -135,8 +155,9 @@ public class UserController {
     @Path("/address")
     @APIResponse(responseCode = "204", description = "Caso sucesso, não retorna conteúdo.")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
-    public void deleteAddress(@HeaderParam("idUser") Integer idUser, @HeaderParam("idAddress") Integer idAddress) {
-        
+    public void deleteAddress(@HeaderParam("idAddress") Integer idAddress) {
+
+        var idUser = userService.resolveUserId(identity);
         var user = userService.deleteAddress(idUser, idAddress);
 
         user.setMessageType(EnumMessageType.DELETE_ADDRESS);
