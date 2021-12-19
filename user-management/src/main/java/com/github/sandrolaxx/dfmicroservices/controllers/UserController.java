@@ -55,20 +55,25 @@ public class UserController {
     @Channel("user")
     Emitter<User> emitter;
 
-    @GET
+    @GET()
+    @Path("/all")
     @APIResponse(responseCode = "200", description = "Caso sucesso, retorna a lista de usuários")
     @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
     @Counted(name = "Quantidade chamadas listagem usuários")
     @SimplyTimed(name = "Tempo simples/médio de busca")
     @Timed(name = "Tempo completo da busca")
     public List<ListUserDto> listAll() {
-
-        if (!identity.hasRole("Admin")) {
-            throw new FrostException(EnumErrorCode.USUARIO_SEM_CREDENCIAIS);
-        }
-
         return userService.findAll();
+    }
 
+    @GET
+    @APIResponse(responseCode = "200", description = "Caso sucesso, retorna as informações usuário")
+    @APIResponse(responseCode = "400", content = @Content(schema = @Schema(allOf = FrostExceptionResponseDto.class)))
+    @Counted(name = "Quantidade chamadas busca informações usuário")
+    @SimplyTimed(name = "Tempo simples/médio de busca informações usuário")
+    @Timed(name = "Tempo completo da busca informações usuário")
+    public ListUserDto userInfo() {
+        return userService.findInfoById(userService.resolveUserId(identity));
     }
 
     @POST

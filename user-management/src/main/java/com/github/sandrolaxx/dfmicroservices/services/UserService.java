@@ -3,6 +3,7 @@ package com.github.sandrolaxx.dfmicroservices.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -50,9 +51,15 @@ public class UserService {
         List<User> userList = User.listAll();
 
         return userList.stream()
-                       .map(p -> userMapper.toListUserDto(p))
+                       .map(p -> userMapper.toListUserDto(decryptUserFiels(p)))
                        .collect(Collectors.toList());
 
+    }
+
+    public ListUserDto findInfoById(Integer idUser) {
+        var user = (User) User.findById(idUser);
+
+        return userMapper.toListUserDto(decryptUserFiels(user));
     }
 
     @Transactional()
@@ -99,11 +106,11 @@ public class UserService {
     @Transactional()
     public User deleteUser(Integer idUser, SecurityIdentity identity) {
         
-        // Optional<User> userToDelete = User.findByIdOptional(idUser);
+        Optional<User> userToDelete = User.findByIdOptional(idUser);
 
-        // userToDelete.ifPresentOrElse(User::delete, () -> {
-        //     throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
-        // });
+        userToDelete.ifPresentOrElse(User::delete, () -> {
+            throw new FrostException(EnumErrorCode.USUARIO_NAO_ENCONTRADO);
+        });
 
         this.removeUserKeycloak(identity);
 
@@ -266,6 +273,30 @@ public class UserService {
         var userId = (JsonNumber) tokenInfo.getClaim("userId");
 
         return userId.intValue();
+    }
+
+    public User decryptUserFiels(User user) {
+        
+        user.setDocument(EncryptUtil.textDecrypt(user.getDocument(), user.getSecret()));
+        user.setEmail(EncryptUtil.textDecrypt(user.getEmail(), user.getSecret()));
+        user.setName(EncryptUtil.textDecrypt(user.getName(), user.getSecret()));
+        user.setPassword(EncryptUtil.textDecrypt(user.getPassword(), user.getSecret()));
+        user.setPhone(EncryptUtil.textDecrypt(user.getPhone(), user.getSecret()));
+
+        var listAddress = user.getAddress().stream()
+            .map(address -> {
+                address.setDistrict(EncryptUtil.textDecrypt(address.getDistrict(), address.getSecret()));
+                address.setLatitude(EncryptUtil.textDecrypt(address.getLatitude(), address.getSecret()));
+                address.setLongitude(EncryptUtil.textDecrypt(address.getLongitude(), address.getSecret()));
+                address.setStreet(EncryptUtil.textDecrypt(address.getStreet(), address.getSecret()));
+
+                return address;
+            }).collect(Collectors.toList());
+
+        user.setAddress(listAddress);
+
+        return user;
+
     }
 
 }
