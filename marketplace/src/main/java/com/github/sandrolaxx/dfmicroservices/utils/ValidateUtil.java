@@ -14,16 +14,6 @@ public class ValidateUtil {
 
     }
 
-    public static void validateIdCart(String idCart) {
-        
-        if (idCart == null
-            || idCart.isBlank()
-            || !(idCart instanceof String)) {
-            throw new FrostException(EnumErrorCode.ID_CARRINHO_INVALIDO);
-        }
-
-    }
-
     public static void validateIdProductCart(Integer idProductCart) {
         
         if (idProductCart == null
@@ -52,12 +42,9 @@ public class ValidateUtil {
 
     }
 
-    public static void validateNewProductOnCart(Integer idProduct, String idCart, Integer quantity) {
-        
+    public static void validateNewProductOnCart(Integer idProduct, Integer quantity) {
         validateIdProduct(idProduct);
-        validateIdCart(idCart);
         validateQuantity(quantity);
-
     }
 
     public static void validateAddQuantity(Integer idProductCart, Integer quantity) {
@@ -78,10 +65,8 @@ public class ValidateUtil {
 
     }
 
-    public static void validateNewOrder(String idCart, EnumPaymentType payType) {
+    public static void validateNewOrder(EnumPaymentType payType) {
         
-        validateIdCart(idCart);
-
         if (payType == null
             || !(payType instanceof EnumPaymentType)) {
             throw new FrostException(EnumErrorCode.TIPO_PAGAMENTO_INFORMADO_INVALIDO);

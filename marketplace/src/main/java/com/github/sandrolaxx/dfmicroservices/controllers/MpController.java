@@ -28,6 +28,7 @@ import org.eclipse.microprofile.openapi.annotations.security.OAuthFlows;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.mutiny.Uni;
 
 @Path("/dona-frost/v1")
@@ -42,12 +43,14 @@ public class MpController {
     @Inject
     MpService service;
 
+    @Inject
+    SecurityIdentity identity;
+
     @GET
     @Path("/cart")
-    public Uni<List<ProductCart>> listProductCartByIdCart(@HeaderParam("idCart") String idCart) {
+    public Uni<List<ProductCart>> listProductCartByIdCart() {
         
-        ValidateUtil.validateIdCart(idCart);
-        Uni<Cart> cart = service.listAllCart(idCart);
+        Uni<Cart> cart = service.resolveIdCart(identity);
 
         return cart.onItem()
                    .transform(c -> c.getProductCartList());
@@ -57,9 +60,11 @@ public class MpController {
     @POST
     @Path("/cart")
     public Uni<Response> addProductOnCart(@HeaderParam("idProduct") Integer idProduct, 
-                @HeaderParam("idCart") String idCart, @HeaderParam("quantity") Integer quantity) {
-        ValidateUtil.validateNewProductOnCart(idProduct, idCart, quantity);            
-        return service.addProductToCart(idCart, idProduct, quantity);
+            @HeaderParam("quantity") Integer quantity) {
+        var cart = service.resolveIdCart(identity);
+
+        ValidateUtil.validateNewProductOnCart(idProduct, quantity);            
+        return service.addProductToCart(cart, idProduct, quantity);
     }
 
     @PUT
@@ -80,18 +85,19 @@ public class MpController {
 
     @GET
     @Path("/order")
-    public Uni<Response> listOrders(@HeaderParam("idUser") Integer idUser, 
-                @HeaderParam("orderStatus") EnumOrderStatus orderStatus) {
-        ValidateUtil.validateIdUser(idUser);            
-        return service.listOrders(idUser, orderStatus);
+    public Uni<Response> listOrders(@HeaderParam("orderStatus") EnumOrderStatus orderStatus) {
+        var userId = service.resolveUserId(identity);
+
+        return service.listOrders(userId, orderStatus);
     }
 
     @POST
     @Path("/order")
-    public Uni<Response> cartToOrder(@HeaderParam("idCart") String idCart, 
-                @HeaderParam("payType") EnumPaymentType payType) {
-        ValidateUtil.validateNewOrder(idCart, payType);           
-        return service.cartToOrder(idCart, payType);
+    public Uni<Response> cartToOrder(@HeaderParam("payType") EnumPaymentType payType) {
+        var cart = service.resolveIdCart(identity);
+
+        ValidateUtil.validateNewOrder(payType);           
+        return service.cartToOrder(cart, payType);
     }
 
 }

@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.smallrye.mutiny.Uni;
 
 @Entity
 @Table(name = "DF_CART")
@@ -40,6 +41,10 @@ public class Cart extends PanacheEntityBase {
 
     @Column(name = "ACTIVE")
     private boolean active;
+
+    public static Uni<Cart> findByUserId(Integer userId) {
+        return find("user.id", userId).singleResult();
+    }
 
     public String getId() {
         return this.id;

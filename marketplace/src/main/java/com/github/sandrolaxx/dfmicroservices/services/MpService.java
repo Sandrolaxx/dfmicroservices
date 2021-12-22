@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.json.JsonNumber;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -21,6 +22,8 @@ import com.github.sandrolaxx.dfmicroservices.utils.EncryptUtil;
 import com.github.sandrolaxx.dfmicroservices.utils.FrostException;
 
 import io.quarkus.hibernate.reactive.panache.Panache;
+import io.quarkus.oidc.runtime.OidcJwtCallerPrincipal;
+import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.mutiny.Uni;
 
 @ApplicationScoped
@@ -28,14 +31,14 @@ public class MpService {
 
     Double total = 0.0;
 
-    public Uni<Response> addProductToCart(String idCart, 
-        Integer idProduct, Integer quantity) throws FrostException {
+    public Uni<Response> addProductToCart(Uni<Cart> cart, Integer idProduct, 
+            Integer quantity) throws FrostException {
 
         return Product.<Product>findById(idProduct)
                     .onItem()
                     .ifNotNull()
                     .call(p -> {
-                        return Cart.<Cart>findById(idCart)
+                        return cart
                             .onItem()
                             .ifNotNull()
                             .call(c -> {
@@ -66,18 +69,12 @@ public class MpService {
         
     }
                     
-    public Uni<Cart> listAllCart(String idCart) {
-        return Cart.findById(idCart);
-    }
-
     public Uni<Response> addQuantityToProductCart(Integer idProductCart, Integer quantity) {
 
         return ProductCart.<ProductCart>findById(idProductCart)
                     .onItem()
                     .ifNotNull()
                     .call(pc -> {
-                        System.out.println(pc.getQuantity());
-
                         pc.setQuantity(pc.getQuantity() + quantity);
 
                         return Panache.withTransaction(pc::persist);       
@@ -108,40 +105,40 @@ public class MpService {
 
     }
 
-    public Uni<Response> cartToOrder(String idCart, EnumPaymentType payType) {
+    public Uni<Response> cartToOrder(Uni<Cart> cart, EnumPaymentType payType) {
         
-        return Cart.<Cart>findById(idCart)
-                    .onItem()
-                    .ifNotNull()
-                    .call(c -> {
-                        Order order = new Order();
-                        Address address = c.getUser().getAddress().stream()
-                                                                  .filter(adr -> adr.isMain())
-                                                                  .findFirst()
-                                                                  .get(); 
-                                                                  
-                        c.getProductCartList().stream()
-                                .forEach(p -> {
-                                    this.sumTotal(p);
-                                    p.setCart(null);
-                                    p.setOrder(order);
-                                });
+        return cart
+                .onItem()
+                .ifNotNull()
+                .call(c -> {
+                    Order order = new Order();
+                    Address address = c.getUser().getAddress().stream()
+                                                                .filter(adr -> adr.isMain())
+                                                                .findFirst()
+                                                                .get(); 
+                                                                
+                    c.getProductCartList().stream()
+                            .forEach(p -> {
+                                this.sumTotal(p);
+                                p.setCart(null);
+                                p.setOrder(order);
+                            });
 
-                        order.setAddress(address);
-                        order.setDeliveryValue(12.0);
+                    order.setAddress(address);
+                    order.setDeliveryValue(12.0);
 
-                        order.setOrderStatus(EnumOrderStatus.AWAITING_PAYMENT);
-                        order.setPaymentType(payType);
-                        order.setTotal(total);
-                        order.setUser(c.getUser());
-                        order.setProductOrderList(c.getProductCartList());
-                        
-                        c.setProductCartList(null);
+                    order.setOrderStatus(EnumOrderStatus.AWAITING_PAYMENT);
+                    order.setPaymentType(payType);
+                    order.setTotal(total);
+                    order.setUser(c.getUser());
+                    order.setProductOrderList(c.getProductCartList());
+                    
+                    c.setProductCartList(null);
 
-                        return Panache.withTransaction(order::persist);       
-                    })
-                    .onItem().ifNotNull().transform(c -> Response.ok().status(Status.CREATED).build())
-                    .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
+                    return Panache.withTransaction(order::persist);       
+                })
+                .onItem().ifNotNull().transform(c -> Response.ok().status(Status.CREATED).build())
+                .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
 
     }
 
@@ -193,9 +190,18 @@ public class MpService {
     }
 
     public Double sumTotal(ProductCart productCart) {
-        total += (productCart.getProduct().getPrice() - productCart.getProduct().getDiscount()) * productCart.getQuantity();
-        
-        return total;
+        return total += (productCart.getProduct().getPrice() - productCart.getProduct().getDiscount()) * productCart.getQuantity();
+    }
+
+    public Uni<Cart> resolveIdCart(SecurityIdentity identity) {
+        return Cart.findByUserId(this.resolveUserId(identity));
+    }
+
+    public Integer resolveUserId(SecurityIdentity identity) {
+        var tokenInfo = (OidcJwtCallerPrincipal) identity.getPrincipal();
+        var userId = (JsonNumber) tokenInfo.getClaim("userId");
+
+        return userId.intValue();
     }
 
 }
