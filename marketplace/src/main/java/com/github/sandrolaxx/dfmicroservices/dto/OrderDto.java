@@ -6,6 +6,8 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumOrderStatus;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPaymentType;
 
 public class OrderDto {
+
+    private Integer orderId;
     
     private List<ProductOrderDto> productsOrder;
 
@@ -28,6 +30,14 @@ public class OrderDto {
     private Double deliveryValue;
     
     private Double total;
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
 
     public List<ProductOrderDto> getProductsOrder() {
         return productsOrder;

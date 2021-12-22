@@ -49,12 +49,10 @@ public class MpController {
     @GET
     @Path("/cart")
     public Uni<List<ProductCart>> listProductCartByIdCart() {
-        
         Uni<Cart> cart = service.resolveIdCart(identity);
 
         return cart.onItem()
                    .transform(c -> c.getProductCartList());
-
     }
 
     @POST
@@ -71,7 +69,8 @@ public class MpController {
     @Path("/cart")
     public Uni<Response> addQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
                 @HeaderParam("quantity") Integer quantity) {
-        ValidateUtil.validateAddQuantity(idProductCart, quantity);            
+        ValidateUtil.validateAddQuantity(idProductCart, quantity);
+                   
         return service.addQuantityToProductCart(idProductCart, quantity);
     }
 
@@ -79,7 +78,8 @@ public class MpController {
     @Path("/cart")
     public Uni<Response> removeQuantityToProductCart(@HeaderParam("idProductCart") Integer idProductCart, 
                 @HeaderParam("quantity") Integer quantity) {
-        ValidateUtil.validateRemoveQuantity(idProductCart, quantity);            
+        ValidateUtil.validateRemoveQuantity(idProductCart, quantity);
+
         return service.removeQuantityToProductCart(idProductCart, quantity);
     }
 
@@ -96,8 +96,15 @@ public class MpController {
     public Uni<Response> cartToOrder(@HeaderParam("payType") EnumPaymentType payType) {
         var cart = service.resolveIdCart(identity);
 
-        ValidateUtil.validateNewOrder(payType);           
+        ValidateUtil.validateNewOrder(payType);
         return service.cartToOrder(cart, payType);
+    }
+
+    @PUT
+    @Path("/order")
+    public Uni<Response> updateOrder(@HeaderParam("orderId") Integer orderId,
+    @HeaderParam("orderStatus") EnumOrderStatus orderStatus) {
+        return service.updateOrder(orderId, orderStatus);
     }
 
 }

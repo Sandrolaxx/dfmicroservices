@@ -18,6 +18,9 @@ import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumMessageType;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateCategory;
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumPlateSize;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 
 @Entity
@@ -52,6 +55,7 @@ public class Product extends PanacheEntityBase {
 
     @Column
     @Enumerated(EnumType.STRING)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "DF_PLATE_CATEGORIES")
     @ElementCollection(targetClass = EnumPlateCategory.class)
     private List<EnumPlateCategory> categoryList;

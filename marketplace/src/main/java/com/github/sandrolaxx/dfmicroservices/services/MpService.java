@@ -165,6 +165,7 @@ public class MpService {
                                 listProductOrderDto.add(productDto);
                             });
 
+                            orderDto.setOrderId(order.getId());
                             orderDto.setTotal(order.getTotal());
                             orderDto.setDeliveryValue(order.getDeliveryValue());
 
@@ -187,6 +188,19 @@ public class MpService {
                     })
                     .onItem().ifNull().failWith(new FrostException(EnumErrorCode.NENHUM_PEDIDO_ENCONTRADO));
                     
+    }
+
+    public Uni<Response> updateOrder(Integer orderId, EnumOrderStatus newStatus) {
+        return Order.<Order>findById(orderId)
+                .onItem()
+                .ifNotNull()
+                .call(order -> {
+                    order.setOrderStatus(newStatus);
+
+                    return Panache.withTransaction(order::persist);
+                })
+                .onItem().ifNotNull().transform(c -> Response.ok().status(Status.NO_CONTENT).build())
+                .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
     }
 
     public Double sumTotal(ProductCart productCart) {
