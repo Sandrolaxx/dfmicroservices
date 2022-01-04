@@ -14,9 +14,9 @@ public class CreateAddressDto {
 
     private Integer numberAp;
 
-    private Double latitude;
+    private String latitude;
 
-    private Double longitude;
+    private String longitude;
 
     private boolean main;
 
@@ -68,19 +68,19 @@ public class CreateAddressDto {
         this.numberAp = numberAp;
     }
 
-    public Double getLatitude() {
+    public String getLatitude() {
         return this.latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public String getLongitude() {
         return this.longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 

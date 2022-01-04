@@ -81,8 +81,8 @@ public class UserControllerTest {
         addressDto.setNumber(91);
         addressDto.setNumberAp(63);
         addressDto.setMain(true);
-        addressDto.setLatitude(4343443D);
-        addressDto.setLongitude(434343D);
+        addressDto.setLatitude("4343443");
+        addressDto.setLongitude("434343");
 
         dto.setAddress(addressDto);
         dto.setName("Roberto");
