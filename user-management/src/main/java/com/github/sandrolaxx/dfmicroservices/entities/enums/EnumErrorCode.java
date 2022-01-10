@@ -9,7 +9,8 @@ public enum EnumErrorCode {
     ERRO_AO_DELETAR_ENDERECO("03", "O usuário deve possuir pelo menos um endereço! Impossível deletar.", HttpStatus.SC_BAD_REQUEST),
     ERRO_AO_DELETAR_USUARIO("04", "Não foi possível remover o usuário do sistema.", HttpStatus.SC_BAD_REQUEST),
     USUARIO_SEM_CREDENCIAIS("05", "Rota não disponível para as credenciais informadas.", HttpStatus.SC_FORBIDDEN),
-    ENDERECO_NAO_ENCONTRADO("06", "Id do endereço não existe na base de dados!", HttpStatus.SC_NOT_FOUND);
+    EMAIL_JA_CADASTRADO("06", "E-mail já utilizado, insira outro ou realize o login.", HttpStatus.SC_BAD_REQUEST),
+    ENDERECO_NAO_ENCONTRADO("07", "Id do endereço não existe na base de dados!", HttpStatus.SC_NOT_FOUND);
 
     private String key;
 

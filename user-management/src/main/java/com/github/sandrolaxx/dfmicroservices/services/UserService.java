@@ -216,10 +216,15 @@ public class UserService {
         newUserKeycloak.setAttributes(Map.of("userId",newUser.getId()));
 
         var tokenKey = auth.getNewToken();
-        var response = restClientKeycloak.createUserKeycloak(tokenKey, newUserKeycloak);
 
-        if (response.getStatus() != 201) {
-            throw new FrostException(EnumErrorCode.ERRO_AO_CADASTRAR_USUARIO);
+        try {
+            var response = restClientKeycloak.createUserKeycloak(tokenKey, newUserKeycloak);
+            
+            if (response.getStatus() != 201) {
+                throw new FrostException(EnumErrorCode.ERRO_AO_CADASTRAR_USUARIO);
+            }
+        } catch (Exception e) {
+            throw new FrostException(EnumErrorCode.EMAIL_JA_CADASTRADO);
         }
 
     }
