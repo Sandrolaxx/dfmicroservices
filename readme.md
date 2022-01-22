@@ -52,7 +52,7 @@ O comando acima vai iniciar todos os container necessários para executar os mic
 Após todos os containers estarem UP, vamos executar o seguinte comando:
 
 ```bash
-quarkus dev
+./mvnw quarkus:dev 
 ```
 
 Abra [http://localhost:8080](http://localhost:8080) com seu navegador para ver o microsserviço de Produtos.
@@ -61,7 +61,7 @@ Abra [http://localhost:8081](http://localhost:8081) com seu navegador para ver o
 
 Abra [http://localhost:8082](http://localhost:8082) com seu navegador para ver o microsserviço de Marketplace.
 
-Documentação disponível em **/q/openapi**.
+Documentação disponível em **/q/swagger-ui**.
 
 ---
 
