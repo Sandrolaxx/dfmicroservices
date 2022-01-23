@@ -2,6 +2,7 @@ package com.github.sandrolaxx.dfmicroservices.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.JsonNumber;
@@ -29,113 +30,114 @@ import io.smallrye.mutiny.Uni;
 @ApplicationScoped
 public class MpService {
 
-    Double total = 0.0;
-
-    public Uni<Response> addProductToCart(Uni<Cart> cart, Integer idProduct, 
+    public Uni<Response> addProductToCart(Uni<Cart> cart, Integer idProduct,
             Integer quantity) throws FrostException {
 
         return Product.<Product>findById(idProduct)
-                    .onItem()
-                    .ifNotNull()
-                    .call(p -> {
-                        return cart
+                .onItem()
+                .ifNotNull()
+                .call(p -> {
+                    return cart
                             .onItem()
                             .ifNotNull()
                             .call(c -> {
 
                                 boolean existsProduct = c.getProductCartList().stream()
-                                                                              .filter(pc -> pc != null 
-                                                                                        && pc.getProduct() != null
-                                                                                        && pc.getProduct().getId() == p.getId())
-                                                                              .findFirst()
-                                                                              .isPresent();
-                                if(existsProduct) {
+                                        .filter(pc -> pc != null
+                                                && pc.getProduct() != null
+                                                && pc.getProduct().getId() == p.getId())
+                                        .findFirst()
+                                        .isPresent();
+
+                                if (existsProduct) {
                                     throw new FrostException(EnumErrorCode.PRODUTO_JA_EXISTENTE_NO_CARRINHO);
                                 }
-                                
+
                                 var productCart = new ProductCart();
                                 productCart.setCart(c);
                                 productCart.setProduct(p);
                                 productCart.setActive(true);
                                 productCart.setQuantity(quantity);
-                    
+
                                 return Panache.withTransaction(productCart::persist);
 
                             })
-                            .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO)); 
-                        })
-                        .onItem().ifNull().failWith(new FrostException(EnumErrorCode.PRODUTO_NAO_ENCONTRADO))
-                        .onItem().ifNotNull().transform(p -> Response.ok().status(Status.CREATED).build());
-        
+                            .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
+                })
+                .onItem().ifNull().failWith(new FrostException(EnumErrorCode.PRODUTO_NAO_ENCONTRADO))
+                .onItem().ifNotNull().transform(p -> Response.ok().status(Status.CREATED).build());
+
     }
-                    
+
     public Uni<Response> addQuantityToProductCart(Integer idProductCart, Integer quantity) {
 
         return ProductCart.<ProductCart>findById(idProductCart)
-                    .onItem()
-                    .ifNotNull()
-                    .call(pc -> {
-                        pc.setQuantity(pc.getQuantity() + quantity);
+                .onItem()
+                .ifNotNull()
+                .call(pc -> {
+                    pc.setQuantity(pc.getQuantity() + quantity);
 
-                        return Panache.withTransaction(pc::persist);       
-                    })
-                    .onItem().ifNotNull().transform(c -> Response.ok().status(Status.NO_CONTENT).build())
-                    .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO)); 
+                    return Panache.withTransaction(pc::persist);
+                })
+                .onItem().ifNotNull().transform(c -> Response.ok().status(Status.NO_CONTENT).build())
+                .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
 
     }
 
     public Uni<Response> removeQuantityToProductCart(Integer idProductCart, Integer quantity) {
 
         return ProductCart.<ProductCart>findById(idProductCart)
-                    .onItem()
-                    .ifNotNull()
-                    .call(pc -> {
+                .onItem()
+                .ifNotNull()
+                .call(pc -> {
 
-                        if (quantity == null
-                            || pc.getQuantity() - quantity <= 0 ) {
-                            return Panache.withTransaction(pc::delete);
-                        }
-                        
-                        pc.setQuantity(pc.getQuantity() - quantity);
+                    if (quantity == null
+                            || pc.getQuantity() - quantity <= 0) {
+                        return Panache.withTransaction(pc::delete);
+                    }
 
-                        return Panache.withTransaction(pc::persist);       
-                    })
-                    .onItem().ifNotNull().transform(c -> Response.ok().status(Status.NO_CONTENT).build())
-                    .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO)); 
+                    pc.setQuantity(pc.getQuantity() - quantity);
+
+                    return Panache.withTransaction(pc::persist);
+                })
+                .onItem().ifNotNull().transform(c -> Response.ok().status(Status.NO_CONTENT).build())
+                .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
 
     }
 
     public Uni<Response> cartToOrder(Uni<Cart> cart, EnumPaymentType payType) {
-        
+
+        Double deliveryValue = 12.0;
+
         return cart
                 .onItem()
                 .ifNotNull()
                 .call(c -> {
                     Order order = new Order();
                     Address address = c.getUser().getAddress().stream()
-                                                                .filter(adr -> adr.isMain())
-                                                                .findFirst()
-                                                                .get(); 
-                                                                
-                    c.getProductCartList().stream()
-                            .forEach(p -> {
-                                this.sumTotal(p);
-                                p.setCart(null);
-                                p.setOrder(order);
-                            });
+                            .filter(adr -> adr.isMain())
+                            .findFirst()
+                            .get();
+
+                    c.getProductCartList().stream().map(pc -> {
+                        pc.setCart(null);
+                        pc.setOrder(order);
+                        return pc;
+                    })
+                    .collect(Collectors.toList());
 
                     order.setAddress(address);
-                    order.setDeliveryValue(12.0);
+                    order.setDeliveryValue(deliveryValue);
 
                     order.setOrderStatus(EnumOrderStatus.AWAITING_PAYMENT);
                     order.setPaymentType(payType);
-                    order.setTotal(total);
+                    order.setTotal(this.sumTotal(c.getProductCartList()));
                     order.setUser(c.getUser());
                     order.setProductOrderList(c.getProductCartList());
-                    
+
                     c.setProductCartList(null);
 
-                    return Panache.withTransaction(order::persist);       
+                    return Panache.withTransaction(order::persist);
                 })
                 .onItem().ifNotNull().transform(c -> Response.ok().status(Status.CREATED).build())
                 .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
@@ -143,51 +145,60 @@ public class MpService {
     }
 
     public Uni<Response> listOrders(Integer idUser, EnumOrderStatus orderStatus) {
-        
-        Uni<List<Order>> uniListOrder = Order.findAllOrdersByidUser(idUser, orderStatus);
-        
+
+        Uni<List<Order>> uniListOrder;
+
+        if (idUser == null) {
+            uniListOrder = Order.findAllOrdersByStatus(orderStatus);
+        } else {
+            uniListOrder = Order.findAllOrdersByidUser(idUser, orderStatus);
+        }
+
         return uniListOrder.onItem()
-                    .ifNotNull().transform(orderList -> {
+                .ifNotNull().transform(orderList -> {
 
-                        List<OrderDto> listOrderDto = new ArrayList<>();
-                        
-                        orderList.stream().forEach(order -> {
-                            OrderDto orderDto = new OrderDto();
-                            List<ProductOrderDto> listProductOrderDto = new ArrayList<>(); 
-                            Address adr = order.getAddress();
-                            
-                            order.getProductOrderList().stream().forEach(productOrder -> {
-                                ProductOrderDto productDto = new ProductOrderDto();
+                    List<OrderDto> listOrderDto = new ArrayList<>();
 
-                                productDto.setProduct(productOrder.getProduct());
-                                productDto.setQuantity(productOrder.getQuantity());
+                    orderList.stream().forEach(order -> {
+                        OrderDto orderDto = new OrderDto();
+                        List<ProductOrderDto> listProductOrderDto = new ArrayList<>();
+                        Address adr = order.getAddress();
 
-                                listProductOrderDto.add(productDto);
-                            });
+                        order.getProductOrderList().stream().forEach(productOrder -> {
+                            ProductOrderDto productDto = new ProductOrderDto();
 
-                            orderDto.setOrderId(order.getId());
-                            orderDto.setTotal(order.getTotal());
-                            orderDto.setDeliveryValue(order.getDeliveryValue());
+                            productDto.setProduct(productOrder.getProduct());
+                            productDto.setQuantity(productOrder.getQuantity());
 
-                            orderDto.setLatitude(Double.valueOf(EncryptUtil.textDecrypt(adr.getLatitude(), adr.getSecret())));
-                            orderDto.setLongitude(Double.valueOf(EncryptUtil.textDecrypt(adr.getLongitude(), adr.getSecret())));
-                            orderDto.setDistrict(EncryptUtil.textDecrypt(adr.getDistrict(), adr.getSecret()));
-                            orderDto.setStreet(EncryptUtil.textDecrypt(adr.getStreet(), adr.getSecret()));
-                            orderDto.setNumber(adr.getNumber());
-                            orderDto.setNumberAp(adr.getNumberAp());
-
-                            orderDto.setProductsOrder(listProductOrderDto);
-                            orderDto.setOrderStatus(order.getOrderStatus());
-                            orderDto.setPayType(order.getPaymentType());
-
-                            listOrderDto.add(orderDto);
-
+                            listProductOrderDto.add(productDto);
                         });
-                        return Response.ok(listOrderDto).build();
 
-                    })
-                    .onItem().ifNull().failWith(new FrostException(EnumErrorCode.NENHUM_PEDIDO_ENCONTRADO));
-                    
+                        orderDto.setOrderId(order.getId());
+                        orderDto.setTotal(order.getTotal());
+                        orderDto.setDeliveryValue(order.getDeliveryValue());
+
+                        orderDto.setLatitude(
+                                Double.valueOf(EncryptUtil.textDecrypt(adr.getLatitude(), adr.getSecret())));
+                        orderDto.setLongitude(
+                                Double.valueOf(EncryptUtil.textDecrypt(adr.getLongitude(), adr.getSecret())));
+                        orderDto.setDistrict(EncryptUtil.textDecrypt(adr.getDistrict(), adr.getSecret()));
+                        orderDto.setStreet(EncryptUtil.textDecrypt(adr.getStreet(), adr.getSecret()));
+                        orderDto.setNumber(adr.getNumber());
+                        orderDto.setNumberAp(adr.getNumberAp());
+
+                        orderDto.setProductsOrder(listProductOrderDto);
+                        orderDto.setOrderStatus(order.getOrderStatus());
+                        orderDto.setPayType(order.getPaymentType());
+                        orderDto.setOrderDate(order.createdAt);
+
+                        listOrderDto.add(orderDto);
+
+                    });
+                    return Response.ok(listOrderDto).build();
+
+                })
+                .onItem().ifNull().failWith(new FrostException(EnumErrorCode.NENHUM_PEDIDO_ENCONTRADO));
+
     }
 
     public Uni<Response> updateOrder(Integer orderId, EnumOrderStatus newStatus) {
@@ -203,8 +214,11 @@ public class MpService {
                 .onItem().ifNull().failWith(new FrostException(EnumErrorCode.CARRINHO_NAO_ENCONTRADO));
     }
 
-    public Double sumTotal(ProductCart productCart) {
-        return total += (productCart.getProduct().getPrice() - productCart.getProduct().getDiscount()) * productCart.getQuantity();
+    public Double sumTotal(List<ProductCart> productCartList) {
+        return productCartList.stream().mapToDouble(pc -> {
+            return (pc.getProduct().getPrice() - pc.getProduct().getDiscount())
+                * pc.getQuantity();
+        }).sum();
     }
 
     public Uni<Cart> resolveIdCart(SecurityIdentity identity) {
@@ -219,4 +233,3 @@ public class MpService {
     }
 
 }
-

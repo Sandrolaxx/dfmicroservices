@@ -96,6 +96,16 @@ public class Order extends PanacheEntityBase {
         
     }
 
+    public static Uni<List<Order>> findAllOrdersByStatus(EnumOrderStatus orderStatus) {
+        
+        if (orderStatus != null) {
+            return find("orderStatus", orderStatus).list();
+        }
+
+        return findAll().list();
+        
+    }
+
     public Integer getId() {
         return this.id;
     }

@@ -86,6 +86,11 @@ public class MpController {
     @GET
     @Path("/order")
     public Uni<Response> listOrders(@HeaderParam("orderStatus") EnumOrderStatus orderStatus) {
+
+        if (identity.hasRole("Admin")) {
+            return service.listOrders(null, orderStatus);
+        }
+
         var userId = service.resolveUserId(identity);
 
         return service.listOrders(userId, orderStatus);
