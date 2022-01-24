@@ -34,6 +34,8 @@ public class OrderDto {
 
     private Date orderDate;
 
+    private String clientName;
+
     public Integer getOrderId() {
         return orderId;
     }
@@ -136,6 +138,14 @@ public class OrderDto {
 
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
     
 }

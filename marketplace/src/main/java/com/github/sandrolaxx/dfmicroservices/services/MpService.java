@@ -176,11 +176,10 @@ public class MpService {
                         orderDto.setOrderId(order.getId());
                         orderDto.setTotal(order.getTotal());
                         orderDto.setDeliveryValue(order.getDeliveryValue());
+                        orderDto.setClientName(EncryptUtil.textDecrypt(order.getUser().getName(), order.getUser().getSecret()));
 
-                        orderDto.setLatitude(
-                                Double.valueOf(EncryptUtil.textDecrypt(adr.getLatitude(), adr.getSecret())));
-                        orderDto.setLongitude(
-                                Double.valueOf(EncryptUtil.textDecrypt(adr.getLongitude(), adr.getSecret())));
+                        orderDto.setLatitude(Double.valueOf(EncryptUtil.textDecrypt(adr.getLatitude(), adr.getSecret())));
+                        orderDto.setLongitude(Double.valueOf(EncryptUtil.textDecrypt(adr.getLongitude(), adr.getSecret())));
                         orderDto.setDistrict(EncryptUtil.textDecrypt(adr.getDistrict(), adr.getSecret()));
                         orderDto.setStreet(EncryptUtil.textDecrypt(adr.getStreet(), adr.getSecret()));
                         orderDto.setNumber(adr.getNumber());
