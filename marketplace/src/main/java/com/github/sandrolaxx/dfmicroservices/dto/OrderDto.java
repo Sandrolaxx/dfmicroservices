@@ -1,6 +1,5 @@
 package com.github.sandrolaxx.dfmicroservices.dto;
 
-import java.util.Date;
 import java.util.List;
 
 import com.github.sandrolaxx.dfmicroservices.entities.enums.EnumOrderStatus;
@@ -32,7 +31,7 @@ public class OrderDto {
     
     private Double total;
 
-    private Date orderDate;
+    private Long orderDate;
 
     private String clientName;
 
@@ -132,11 +131,11 @@ public class OrderDto {
         this.numberAp = numberAp;
     }
 
-    public Date getOrderDate() {
+    public Long getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(Long orderDate) {
         this.orderDate = orderDate;
     }
 

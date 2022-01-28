@@ -188,7 +188,7 @@ public class MpService {
                         orderDto.setProductsOrder(listProductOrderDto);
                         orderDto.setOrderStatus(order.getOrderStatus());
                         orderDto.setPayType(order.getPaymentType());
-                        orderDto.setOrderDate(order.createdAt);
+                        orderDto.setOrderDate(order.createdAt.getTime());
 
                         listOrderDto.add(orderDto);
 
