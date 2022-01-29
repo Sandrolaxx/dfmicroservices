@@ -30,6 +30,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
+import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 
 @Entity
@@ -92,18 +93,22 @@ public class Order extends PanacheEntityBase {
             query = "user.id = :idUser and orderStatus = :orderStatus";
         }
 
-        return find(query, params).list();
+        return find(query, Sort.descending("createdAt"), params).list();
         
     }
 
     public static Uni<List<Order>> findAllOrdersByStatus(EnumOrderStatus orderStatus) {
         
+        Map<String, Object> params = new HashMap<>();
+
         if (orderStatus != null) {
-            return find("orderStatus", orderStatus).list();
+            params.put("orderStatus", orderStatus);
+            var query = "orderStatus = :orderStatus";
+
+            return find(query, Sort.ascending("createdAt"), params).list();
         }
 
-        return findAll().list();
-        
+        return findAll(Sort.ascending("createdAt")).list();
     }
 
     public Integer getId() {
