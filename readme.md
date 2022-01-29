@@ -26,6 +26,7 @@ Abaixo temos o diagrama das aplicações em conjunto:
 
 ## 🤓 Tecnologias utilizadas
 
+* 🔤 Lang - [Java SE 11](https://docs.oracle.com/en/java/javase/11/)
 * ⚡ Framework Java - [Quarkus](https://quarkus.io/)
 * 🔐 Autenticação - [Keycloak](https://www.keycloak.org/)
 * 📨 Mensageria - [ActiveMQ](https://activemq.apache.org/)
