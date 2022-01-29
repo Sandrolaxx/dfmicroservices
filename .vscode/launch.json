@@ -26,7 +26,7 @@
         "request": "attach",
         "hostName": "localhost",
         "name": "Debug Quarkus application (marketplace)",
-        "port": 5006
+        "port": 5005
     },
     {
         "preLaunchTask": "quarkus:dev (user-management)",
