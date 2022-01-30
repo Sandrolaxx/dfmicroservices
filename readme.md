@@ -72,3 +72,9 @@ Documentação disponível em **/q/swagger-ui**.
 * Aprimorar coleta de log's e monitoramento.
 
 Caso queira me ajudar com o projeto ficarei muito feliz em aceitar seu pull request 🙂. 
+
+--
+
+## 📃 Licença
+
+Este projeto está sobre a licença [Apache 2.0](LICENSE).
