@@ -73,7 +73,7 @@ Documentação disponível em **/q/swagger-ui**.
 
 Caso queira me ajudar com o projeto ficarei muito feliz em aceitar seu pull request 🙂. 
 
---
+---
 
 ## 📃 Licença
 
